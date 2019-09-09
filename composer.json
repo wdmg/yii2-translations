@@ -1,0 +1,38 @@
+{
+  "name": "wdmg/yii2-translations",
+  "description": "Translate manager",
+  "keywords": ["yii2", "yii2-translations", "translations", "wdmg"],
+  "type": "yii2-extension",
+  "license": "MIT",
+  "version": "1.0.0",
+  "homepage": "https://github.com/wdmg/yii2-translations",
+  "support": {
+    "source": "https://github.com/wdmg/yii2-translations",
+    "issues": "https://github.com/wdmg/yii2-translations/issues"
+  },
+  "authors": [
+    {
+      "name": "Alexsander Vyshnyvetskyy",
+      "email": "alex.vyshnyvetskyy@gmail.com"
+    },
+    {
+      "name": "W.D.M.Group, Ukraine",
+      "email": "wdmg.com.ua@gmail.com"
+    }
+  ],
+  "require": {
+    "yiisoft/yii2": "^2.0.20",
+    "wdmg/yii2-base": "^1.0.1"
+  },
+  "minimum-stability": "dev",
+  "autoload": {
+    "psr-4": {
+      "wdmg\\translations\\": ""
+    }
+  },
+  "extra": {
+    "options": {
+      "routePrefix": "admin"
+    }
+  }
+}
