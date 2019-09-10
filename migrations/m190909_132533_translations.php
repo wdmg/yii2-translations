@@ -19,6 +19,7 @@ class m190909_132533_translations extends Migration
 
         $this->createTable('{{%trans_sources}}', [
             'id' => $this->primaryKey(), // Primary key ID (int)
+            'language' => $this->string(16), // Source language
             'category' => $this->string(255), // Category of translation
             'alias' => $this->string(32), // Alias key of translation, like `is-text-about-company-12945f0845` for entry `Is text about company...`
             'message' => $this->text(), // Message source
@@ -34,6 +35,7 @@ class m190909_132533_translations extends Migration
             [
                 'id',
                 'category',
+                'language',
                 'alias',
                 'message(255)'
             ]
@@ -41,7 +43,7 @@ class m190909_132533_translations extends Migration
 
         $this->createTable('{{%trans_messages}}', [
             'id' => $this->integer(11)->notNull(), // Primary key ID (int) of `trans_sources.id`
-            'language' => $this->string(16), // Lang ID
+            'language' => $this->string(16), // Translation language
             'translation' => $this->text(), // Message translation
             'status' => $this->tinyInteger(1)->null()->defaultValue(0),
             'created_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'), // Translation created date (timestamp)

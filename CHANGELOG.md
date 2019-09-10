@@ -1,7 +1,10 @@
 Changelog
 =========
 
-## 1.0.0 (2019-09-10)
+## 1.0.1 (2019-09-10)
+ * Added console scan for sources and translations
+ 
+## 1.0.0 (2019-09-09)
  * First pre-release
  * Added scanTranslations() and getSourceMessages() methods
  * Added UI translations

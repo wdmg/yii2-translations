@@ -69,7 +69,7 @@ class Translations extends ActiveRecord
     public function rules()
     {
         $rules = [
-            ['id', 'integer', 'max' => 11],
+            ['id', 'integer'],
             [['language', 'translation'], 'required'],
             ['language', 'string', 'max' => 16],
             ['translation', 'string'],

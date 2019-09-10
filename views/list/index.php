@@ -9,15 +9,7 @@ $this->title = Yii::t('app/modules/translations', 'Translations list');
 $this->params['breadcrumbs'][] = ['label' => $this->context->module->name, 'url' => ['translations/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
-$translations = $this->context->module->scanTranslations(['ru-RU']);
-var_dump($this->context->module->getSourceMessages($translations));
-
 ?>
-
-<p><?= Yii::t('app/frontend', 'Welcome!'); ?></p>
-<p><?= Yii::t('app/frontend', 'Is text about company...'); ?></p>
-<p><?= Yii::t('app/frontend', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.'); ?></p>
-
 <div class="page-header">
     <h1><?= Html::encode($this->title) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small></h1>
 </div>

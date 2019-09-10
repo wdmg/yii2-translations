@@ -17,6 +17,7 @@ use yii\behaviors\SluggableBehavior;
  * This is the model class for table "{{%trans_sources}}".
  *
  * @property int $id
+ * @property string $language
  * @property string $category
  * @property string $alias
  * @property string $message
@@ -81,8 +82,9 @@ class Sources extends ActiveRecord
     public function rules()
     {
         $rules = [
-            [['category', 'alias', 'message'], 'required'],
+            [['category', 'language', 'alias', 'message'], 'required'],
             ['category', 'string', 'max' => 255],
+            ['language', 'string', 'max' => 16],
             ['alias', 'string', 'max' => 32],
             ['alias', 'unique', 'message' => Yii::t('app/modules/translations', 'Alias key must be unique.')],
             ['alias', 'match', 'pattern' => '/^[A-Za-z0-9\-\_]+$/', 'message' => Yii::t('app/modules/translations','It allowed only Latin alphabet, numbers and the «-», «_» characters.')],
@@ -103,6 +105,7 @@ class Sources extends ActiveRecord
     {
         return [
             'id' => Yii::t('app/modules/translations', 'ID'),
+            'language' => Yii::t('app/modules/translations', 'Language'),
             'category' => Yii::t('app/modules/translations', 'Category'),
             'alias' => Yii::t('app/modules/translations', 'Alias key'),
             'message' => Yii::t('app/modules/translations', 'Message'),
