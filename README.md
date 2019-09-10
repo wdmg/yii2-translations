@@ -33,8 +33,8 @@ To add a module to the project, add the following data in your configuration fil
 
     
     'modules' => [
-        'users' => [
-            'class' => 'wdmg\users\Module',
+        'translations' => [
+            'class' => 'wdmg\translations\Module',
             'routePrefix' => 'admin',
         ],
         ...
