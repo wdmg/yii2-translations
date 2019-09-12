@@ -31,6 +31,12 @@ use yii\behaviors\BlameableBehavior;
 class Languages extends ActiveRecord
 {
 
+    const LANGUAGE_STATUS_DISABLED = 0; // Language not active
+    const LANGUAGE_STATUS_ACTIVE = 1; // Language enabled
+
+    public $languages;
+    public $autoActivate;
+
     /**
      * {@inheritdoc}
      */
@@ -76,7 +82,8 @@ class Languages extends ActiveRecord
             ['url', 'string', 'max' => 3],
             ['locale', 'string', 'max' => 10],
             ['name', 'string', 'max' => 64],
-            [['is_default', 'is_system', 'status'], 'boolean'],
+            [['autoActivate', 'is_default', 'is_system', 'status'], 'boolean'],
+            [['autoActivate'], 'default', 'value' => 1],
             [['created_at', 'updated_at'], 'safe'],
         ];
 
@@ -100,12 +107,63 @@ class Languages extends ActiveRecord
             'is_default' => Yii::t('app/modules/translations', 'Is default?'),
             'is_system' => Yii::t('app/modules/translations', 'Is system?'),
             'status' => Yii::t('app/modules/translations', 'Status'),
+            'languages' => Yii::t('app/modules/translations', 'Languages'),
+            'autoActivate' => Yii::t('app/modules/translations', '- auto activate'),
             'created_at' => Yii::t('app/modules/translations', 'Created at'),
             'created_by' => Yii::t('app/modules/translations', 'Created by'),
             'updated_at' => Yii::t('app/modules/translations', 'Updated at'),
             'updated_by' => Yii::t('app/modules/translations', 'Updated by'),
         ];
 
+    }
+
+
+    /**
+     * Get avialibles languages
+     *
+     * @note Function get languages list from DB
+     * @param $onlyActive boolean flag, if need only active languages
+     * @return array of modules
+     */
+    public static function getAllLanguages($onlyActive = true)
+    {
+        if ($onlyActive)
+            $cond = ['status' => self::LANGUAGE_STATUS_ACTIVE];
+        else
+            $cond = '`status` >= ' . self::LANGUAGE_STATUS_DISABLED;
+
+        $modules = self::find()
+            ->where($cond)
+            ->asArray()
+            ->indexBy('locale')
+            ->all();
+
+        return $modules;
+    }
+
+    /**
+     * Get preinstalled languages
+     *
+     * @note Function get languages list from support locales
+     * @param $langs array of available languages
+     * @param $support array of support locales
+     * @return array of languages
+     */
+    public static function getOtherLangs($languages = [], $support = [])
+    {
+
+        if (!is_array($languages) || !is_array($support))
+            return [];
+
+        $output = [];
+        foreach ($languages as $locale => $lang) {
+            foreach ($support as $data) {
+                if (($locale !== $data['locale']))
+                    $output[] = $data;
+            }
+        }
+
+        return array_diff($support, $output);
     }
 
     /**

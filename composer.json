@@ -21,10 +21,12 @@
     }
   ],
   "require": {
+    "ext-intl": ">=1.0.0",
     "yiisoft/yii2": "^2.0.20",
-    "wdmg/yii2-base": "^1.0.1"
+    "wdmg/yii2-base": "^1.0.1",
+    "wdmg/yii2-selectinput": "^1.0.5",
+    "bower-asset/flags": "dev-master"
   },
-  "minimum-stability": "dev",
   "autoload": {
     "psr-4": {
       "wdmg\\translations\\": ""

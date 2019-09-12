@@ -28,7 +28,16 @@ return [
     'Updated by' => "Автор изменений",
     'Actions' => 'Действия',
     'Add translation' => 'Добавить перевод',
+
+    'Available languages' => 'Доступные языки',
+    'Select a language' => 'Выберите язык',
     'Add language' => 'Добавить язык',
+    '- auto activate' => '- автоматически активировать',
+
+    'OK! Language `{name}` successfully {status}.' => 'OK! Язык `{name}` был успешно {status}.',
+    'added and activated' => 'добавлен и активирован',
+    'added' => 'добавлен',
+    'An error occurred while adding a language `{name}`.' => 'Произошла ошабка при добавлении языка `{name}`.',
 
 
 ];
