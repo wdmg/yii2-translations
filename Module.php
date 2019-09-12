@@ -31,7 +31,7 @@ class Module extends BaseModule
     /**
      * {@inheritdoc}
      */
-    public $defaultRoute = "list/index";
+    public $defaultRoute = "langs/index";
 
     /**
      * @var string, the name of module

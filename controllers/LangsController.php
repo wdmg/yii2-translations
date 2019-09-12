@@ -67,7 +67,25 @@ class LangsController extends Controller
         $searchModel = new LanguagesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
-        if (Yii::$app->request->isPost) {
+        // Change model status (aJax request by switcher)
+        if (Yii::$app->request->isAjax) {
+            if (Yii::$app->request->get('change') == "status") {
+                if (Yii::$app->request->post('id', null)) {
+                    $id = Yii::$app->request->post('id');
+                    $status = Yii::$app->request->post('value', 0);
+                    if ($model = $model->findOne(['id' => intval($id)])) {
+                        if (intval($model->is_default) == 0 || intval($model->is_system) == 0) {
+                            if ($model->updateAttributes(['status' => intval($status)]))
+                                return true;
+                            else
+                                return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
+        } elseif (Yii::$app->request->isPost) {
             if ($post = Yii::$app->request->post()) {
 
                 $activate = false;
@@ -107,6 +125,41 @@ class LangsController extends Controller
                                 )
                             );
                         }
+                    }
+                }
+            }
+        } else {
+            if (Yii::$app->request->get('action') == "delete") {
+                if (Yii::$app->request->get('id', null)) {
+                    $id = Yii::$app->request->get('id');
+                    if ($model = $model->findOne(['id' => intval($id)])) {
+                        if (intval($model->is_default) == 0 || intval($model->is_system) == 0) {
+                            if ($model->delete()) {
+                                Yii::$app->getSession()->setFlash(
+                                    'success',
+                                    Yii::t(
+                                        'app/modules/translations',
+                                        'OK! Language `{name}` successfully deleted.',
+                                        [
+                                            'name' => $model->name,
+                                        ]
+                                    )
+                                );
+                            } else {
+                                Yii::$app->getSession()->setFlash(
+                                    'danger',
+                                    Yii::t(
+                                        'app/modules/translations',
+                                        'An error occurred while deleting a language `{name}`.',
+                                        [
+                                            'name' => $model->name,
+                                        ]
+                                    )
+                                );
+                            }
+                        }
+                    } else {
+                        throw new NotFoundHttpException(Yii::t('app/modules/translations', 'The requested language does not exist.'));
                     }
                 }
             }

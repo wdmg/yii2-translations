@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\widgets\ActiveForm;
@@ -32,7 +33,10 @@ if (is_array($locales)) {
     <h1><?= Html::encode($this->title) ?> <small class="text-muted pull-right">[v.<?= $this->context->module->version ?>]</small></h1>
 </div>
 <div class="translations-langs-index">
-    <?php Pjax::begin(); ?>
+    <?php Pjax::begin([
+        'id' => "translationsLangsAjax",
+        'timeout' => 5000
+    ]); ?>
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
@@ -60,9 +64,70 @@ if (is_array($locales)) {
                 }
             ],
 
-            'is_default',
-            'is_system',
-            'status',
+            [
+                'attribute' => 'is_default',
+                'label' => Yii::t('app/modules/translations', 'Is default?'),
+                'filter' => true,
+                'format' => 'html',
+                'headerOptions' => [
+                    'class' => 'text-center'
+                ],
+                'contentOptions' => [
+                    'class' => 'text-center'
+                ],
+                'value' => function($data) {
+
+                    if ($data->is_default)
+                        return '<span class="glyphicon glyphicon-check text-success"></span>';
+                    else
+                        return '<span class="glyphicon glyphicon-check text-muted"></span>';
+
+                }
+            ], [
+                'attribute' => 'is_system',
+                'label' => Yii::t('app/modules/translations', 'Is system?'),
+                'filter' => true,
+                'format' => 'html',
+                'headerOptions' => [
+                    'class' => 'text-center'
+                ],
+                'contentOptions' => [
+                    'class' => 'text-center'
+                ],
+                'value' => function($data) {
+
+                    if ($data->is_system)
+                        return '<span class="glyphicon glyphicon-check text-success"></span>';
+                    else
+                        return '<span class="glyphicon glyphicon-check text-muted"></span>';
+
+                }
+            ], [
+                'attribute' => 'status',
+                'format' => 'raw',
+                'headerOptions' => [
+                    'class' => 'text-center'
+                ],
+                'contentOptions' => [
+                    'class' => 'text-center'
+                ],
+                'value' => function($data) {
+                    if ($data->is_system || $data->is_default) {
+
+                        if ($data->status == $data::LANGUAGE_STATUS_ACTIVE)
+                            return '<span class="label label-success">' . Yii::t('app/modules/translations', 'Active') . '</span>';
+                        else
+                            return '<span class="label label-default">' . Yii::t('app/modules/translations', 'Disabled') . '</span>';
+
+                    } else {
+                        if ($data->status == $data::LANGUAGE_STATUS_ACTIVE) {
+                            return '<div id="switcher-' . $data->id . '" data-value-current="' . $data->status . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-default">OFF</button><button data-value="1" class="btn btn-xs btn-primary">ON</button></div>';
+                        } else {
+                            return '<div id="switcher-' . $data->id . '" data-value-current="' . $data->status . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-danger">OFF</button><button data-value="1" class="btn btn-xs btn-default">ON</button></div>';
+                        }
+                    }
+                }
+            ],
 
             [
                 'class' => 'yii\grid\ActionColumn',
@@ -72,6 +137,25 @@ if (is_array($locales)) {
                 ],
                 'contentOptions' => [
                     'class' => 'text-center'
+                ],
+                'visibleButtons' => [
+                    'view' => false,
+                    'update' => false,
+                    'delete' => function($data) {
+                        return (($data->is_system || $data->is_default) ? false : true);
+                    }
+                ],
+                'buttons'=> [
+                    'delete' => function($url, $data, $key) {
+                        return Html::a('<span class="glyphicon glyphicon-trash"></span>', Url::to(['langs/index', 'action' => 'delete', 'id' => $data['id']]), [
+                            'title' => Yii::t('yii', 'Delete'),
+                            'data' => [
+                                'confirm' =>  Yii::t('app/modules/translations', 'Are you sure you want to delete this language? This action will not delete translations.'),
+                                'pjax' => '0',
+                                'id' => $key
+                            ],
+                        ]);
+                    },
                 ],
             ]
         ]
@@ -120,5 +204,25 @@ if (is_array($locales)) {
     </div>
     <?php Pjax::end(); ?>
 </div>
+
+<?php $this->registerJs(
+    'var $container = $("#translationsLangsAjax");
+    var requestURL = window.location.href;
+    if ($container.length > 0) {
+        $container.delegate(\'[data-toggle="button-switcher"] button\', \'click\', function() {
+            var id = $(this).parent(\'.btn-group\').data(\'id\');
+            var value = $(this).data(\'value\');
+             $.ajax({
+                type: "POST",
+                url: requestURL + \'?change=status\',
+                dataType: \'json\',
+                data: {\'id\': id, \'value\': value},
+                complete: function(data) {
+                    $.pjax.reload({type:\'POST\', container:\'#translationsLangsAjax\'});
+                }
+             });
+        });
+    }', \yii\web\View::POS_READY
+); ?>
 
 <?php echo $this->render('../_debug'); ?>

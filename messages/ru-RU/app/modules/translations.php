@@ -39,6 +39,12 @@ return [
     'added' => 'добавлен',
     'An error occurred while adding a language `{name}`.' => 'Произошла ошабка при добавлении языка `{name}`.',
 
+    'Active' => 'Активен',
+    'Disabled' => 'Не активен',
+    'OK! Language `{name}` successfully deleted.' => 'OK! Язык `{name}` был успешно удален.',
+    'An error occurred while deleting a language `{name}`.' => 'Произошла ошабка при удалении языка `{name}`.',
+    'Are you sure you want to delete this language? This action will not delete translations.' => 'Вы уверены, что хотите удалить этот язык? Это действие не удалит переводы.',
+
 
 ];
 
