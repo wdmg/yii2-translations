@@ -36,6 +36,11 @@ To add a module to the project, add the following data in your configuration fil
         'translations' => [
             'class' => 'wdmg\translations\Module',
             'routePrefix' => 'admin',
+            'locales' => ["en", "en-US", "uk", "uk-UA", "ru", "ru-RU", "de", "de-DE", "fr", "fr-FR", "hi", "hi-IN"], // support languages (locales)
+            'forceTranslation' => false, // force message translation when the source and target languages are the same
+            'sourceLanguage' => 'en-US', // the language of the original messages
+            'enableCaching' => false, // enable caching translated messages
+            'cachingDuration' => 3600 // time in seconds that the messages can be cached
         ],
         ...
     ],
@@ -54,6 +59,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
         ]);
     ?>
 
-# Status and version [in progress development]
+# Status and version [ready to use]
+* v.1.1.0 - CRUD for translations
 * v.1.0.1 - Added console scan for sources and translations
 * v.1.0.0 - Added base module, model, controllers and migrations

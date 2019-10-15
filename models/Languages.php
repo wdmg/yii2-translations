@@ -117,9 +117,16 @@ class Languages extends ActiveRecord
 
     }
 
+    /**
+     * @return integer
+     */
+    public static function getCount()
+    {
+        return self::find()->where(['status' => self::LANGUAGE_STATUS_ACTIVE])->count();
+    }
 
     /**
-     * Get avialibles languages
+     * Get availables languages
      *
      * @note Function get languages list from DB
      * @param $onlyActive boolean flag, if need only active languages
@@ -142,7 +149,7 @@ class Languages extends ActiveRecord
     }
 
     /**
-     * Get preinstalled languages
+     * Get pre-installed languages
      *
      * @note Function get languages list from support locales
      * @param $langs array of available languages

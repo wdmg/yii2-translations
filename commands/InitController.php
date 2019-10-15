@@ -45,7 +45,7 @@ class InitController extends Controller
         echo "Select the operation you want to perform:\n";
         echo "  1) Apply all module migrations\n";
         echo "  2) Revert all module migrations\n";
-        echo "  3) Scan and add translations\n\n";
+        echo "  3) Scan/re-scan and add translations\n\n";
         echo "Your choice: ";
 
         if(!is_null($this->choice))
@@ -59,6 +59,7 @@ class InitController extends Controller
             Yii::$app->runAction('migrate/down', ['migrationPath' => '@vendor/wdmg/yii2-translations/migrations', 'interactive' => true]);
         } else if($selected == "3") {
 
+            $langList = null;
             $languagesModel = new Languages();
             foreach ($languagesModel->find()->where(['status' => 1])->select('locale')->asArray()->groupBy('locale')->all() as $locale) {
                 foreach ($locale as $lang) {
@@ -112,8 +113,8 @@ class InitController extends Controller
                                 //$languagesModel->status = (Yii::$app->sourceLanguage == $lang['locale']) ? 0 : 1;
                                 $languagesModel->status = 1;
                                 $languagesModel->created_at = new yii\db\Expression('NOW()');
-                                $languagesModel->updated_by = 0;
-                                $languagesModel->created_at = new yii\db\Expression('NOW()');
+                                $languagesModel->created_by = 0;
+                                $languagesModel->updated_at = new yii\db\Expression('NOW()');
                                 $languagesModel->updated_by = 0;
                                 if ($languagesModel->validate()) {
                                     $insertRows[] = $languagesModel;
@@ -164,16 +165,16 @@ class InitController extends Controller
                             $sourcesModel->category = $category;
                             $sourcesModel->message = $message;
                             $sourcesModel->alias = $sourcesModel->getStringAlias($message);
-                            $languagesModel->created_at = new yii\db\Expression('NOW()');
-                            $languagesModel->updated_by = 0;
-                            $languagesModel->created_at = new yii\db\Expression('NOW()');
-                            $languagesModel->updated_by = 0;
+                            $sourcesModel->created_at = new yii\db\Expression('NOW()');
+                            $sourcesModel->created_by = 0;
+                            $sourcesModel->updated_at = new yii\db\Expression('NOW()');
+                            $sourcesModel->updated_by = 0;
                             if ($sourcesModel->validate()) {
                                 $insertRows[] = $sourcesModel;
                                 $sourceCount++;
                                 $sourcesIds[$category][$message] = $sourceCount;
                             } else {
-                                echo var_export($translationsModel->errors, true);
+                                echo var_export($sourcesModel->errors, true);
                             }
                         }
                     }
@@ -197,10 +198,10 @@ class InitController extends Controller
                                 $translationsModel->language = $lang;
                                 $translationsModel->translation = $translation;
                                 $translationsModel->status = 1;
-                                $languagesModel->created_at = new yii\db\Expression('NOW()');
-                                $languagesModel->updated_by = 0;
-                                $languagesModel->created_at = new yii\db\Expression('NOW()');
-                                $languagesModel->updated_by = 0;
+                                $translationsModel->created_at = new yii\db\Expression('NOW()');
+                                $translationsModel->created_by = 0;
+                                $translationsModel->updated_at = new yii\db\Expression('NOW()');
+                                $translationsModel->updated_by = 0;
 
                                 if ($translationsModel->validate()) {
                                     $insertRows[] = $translationsModel;

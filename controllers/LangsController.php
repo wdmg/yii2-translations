@@ -9,6 +9,7 @@ use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
 use \yii\helpers\ArrayHelper;
 use wdmg\translations\models\Languages;
+use wdmg\translations\models\Translations;
 use wdmg\translations\models\LanguagesSearch;
 
 /**
@@ -53,6 +54,42 @@ class LangsController extends Controller
         }
 
         return $behaviors;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function beforeAction($action)
+    {
+        $viewed = array();
+        $session = Yii::$app->session;
+
+        if(isset($session['viewed-flash']) && is_array($session['viewed-flash']))
+            $viewed = $session['viewed-flash'];
+
+        if (Languages::getCount() == 0 && !in_array('translations-disabled-no-languages', $viewed) && is_array($viewed)) {
+            Yii::$app->getSession()->setFlash(
+                'warning',
+                Yii::t(
+                    'app/modules/translations',
+                    'There are currently no active (available) languages. Therefore, the module cannot be activated by the system.'
+                )
+            );
+            $session['viewed-flash'] = array_merge(array_unique($viewed), ['translations-disabled-no-languages']);
+        }
+
+        if (Translations::getCount() == 0 && !in_array('translations-disabled-because-empty', $viewed) && is_array($viewed)) {
+            Yii::$app->getSession()->setFlash(
+                'warning',
+                Yii::t(
+                    'app/modules/translations',
+                    'There are currently no active (available) translations. Therefore, the module cannot be activated by the system.'
+                )
+            );
+            $session['viewed-flash'] = array_merge(array_unique($viewed), ['translations-disabled-because-empty']);
+        }
+
+        return parent::beforeAction($action);
     }
 
     /**

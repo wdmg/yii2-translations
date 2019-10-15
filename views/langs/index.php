@@ -10,7 +10,7 @@ use wdmg\widgets\SelectInput;
 /* @var $this yii\web\View */
 
 $this->title = Yii::t('app/modules/translations', 'Languages list');
-$this->params['breadcrumbs'][] = ['label' => $this->context->module->name, 'url' => ['translations/index']];
+$this->params['breadcrumbs'][] = ['label' => $this->context->module->name, 'url' => ['list/index']];
 $this->params['breadcrumbs'][] = $this->title;
 
 $bundle = FlagsAsset::register($this);

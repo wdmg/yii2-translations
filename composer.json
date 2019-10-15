@@ -4,7 +4,7 @@
   "keywords": ["yii2", "yii2-translations", "translations", "wdmg"],
   "type": "yii2-extension",
   "license": "MIT",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "homepage": "https://github.com/wdmg/yii2-translations",
   "support": {
     "source": "https://github.com/wdmg/yii2-translations",
@@ -34,7 +34,12 @@
   },
   "extra": {
     "options": {
-      "routePrefix": "admin"
+      "routePrefix": "admin",
+      "locales": ["en", "en-US", "uk", "uk-UA", "ru", "ru-RU", "de", "de-DE", "fr", "fr-FR", "hi", "hi-IN"],
+      "forceTranslation": false,
+      "sourceLanguage": "en-US",
+      "enableCaching": false,
+      "cachingDuration": 3600
     }
   }
 }

@@ -27,6 +27,8 @@ use yii\behaviors\BlameableBehavior;
  */
 class Translations extends ActiveRecord
 {
+    const TRANSLATION_STATUS_DISABLED = 0; // Translation not active
+    const TRANSLATION_STATUS_ACTIVE = 1; // Translation active
 
     /**
      * {@inheritdoc}
@@ -75,6 +77,9 @@ class Translations extends ActiveRecord
             ['translation', 'string'],
             ['status', 'boolean'],
             [['created_at', 'updated_at'], 'safe'],
+
+
+            [['first_name',], 'required', 'on'=>['create','update']],  // create scenario
         ];
 
         if (class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users'])) {
@@ -111,9 +116,25 @@ class Translations extends ActiveRecord
     }
 
     /**
+     * @inheritdoc
+     */
+    public static function primaryKey()
+    {
+        return ['id'];
+    }
+
+    /**
+     * @return integer
+     */
+    public static function getCount()
+    {
+        return self::find()->where(['status' => self::TRANSLATION_STATUS_ACTIVE])->count();
+    }
+
+    /**
      * @return object of \yii\db\ActiveQuery
      */
-    public function getLang()
+    public function getLanguages()
     {
         if(class_exists('\wdmg\translations\models\Languages'))
             return $this->hasOne(\wdmg\translations\models\Languages::className(), ['locale' => 'language']);
@@ -124,7 +145,18 @@ class Translations extends ActiveRecord
     /**
      * @return object of \yii\db\ActiveQuery
      */
-    public function getSource()
+    public function getCategory()
+    {
+        if(class_exists('\wdmg\translations\models\Sources'))
+            return $this->hasOne(\wdmg\translations\models\Sources::className(), ['id' => 'id']);
+        else
+            return null;
+    }
+
+    /**
+     * @return object of \yii\db\ActiveQuery
+     */
+    public function getSources()
     {
         if(class_exists('\wdmg\translations\models\Sources'))
             return $this->hasOne(\wdmg\translations\models\Sources::className(), ['id' => 'id']);
@@ -141,5 +173,31 @@ class Translations extends ActiveRecord
             return $this->hasOne(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
         else
             return null;
+    }
+
+    public static function getLanguagesList($addAllLabel = true) {
+
+        $items = [];
+        if ($addAllLabel)
+            $items = ['*' => Yii::t('app/modules/translations', 'All languages')];
+
+        $languages = new \wdmg\translations\models\Languages();
+        $list = $languages->find()->select(['locale', 'name'])->where(['status' => $languages::LANGUAGE_STATUS_ACTIVE])->asArray()->all();
+        foreach($list as $item) {
+            $items[$item['locale']] = $item['name'];
+        }
+        return $items;
+    }
+
+    public static function getStatusModeList($addAllLabel = true) {
+
+        $items = [];
+        if ($addAllLabel)
+            $items = ['*' => Yii::t('app/modules/translations', 'All modes')];
+
+        return ArrayHelper::merge($items, [
+            self::TRANSLATION_STATUS_ACTIVE => Yii::t('app/modules/translations', 'Active'),
+            self::TRANSLATION_STATUS_DISABLED => Yii::t('app/modules/translations', 'Not active'),
+        ]);
     }
 }

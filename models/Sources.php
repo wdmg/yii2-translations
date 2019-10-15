@@ -85,10 +85,12 @@ class Sources extends ActiveRecord
             [['category', 'language', 'alias', 'message'], 'required'],
             ['category', 'string', 'max' => 255],
             ['language', 'string', 'max' => 16],
+            ['message', 'string'],
+            ['alias', 'checkUniqueAlias', 'skipOnEmpty' => false, 'skipOnError' => false],
             ['alias', 'string', 'max' => 32],
-            ['alias', 'unique', 'message' => Yii::t('app/modules/translations', 'Alias key must be unique.')],
             ['alias', 'match', 'pattern' => '/^[A-Za-z0-9\-\_]+$/', 'message' => Yii::t('app/modules/translations','It allowed only Latin alphabet, numbers and the «-», «_» characters.')],
             [['created_at', 'updated_at'], 'safe'],
+            //[['alias'], 'required', 'on' => ['create', 'update']],
         ];
 
         if (class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users'])) {
@@ -96,6 +98,14 @@ class Sources extends ActiveRecord
         }
 
         return $rules;
+    }
+
+    public function checkUniqueAlias()
+    {
+        if (is_null($sources = self::findOne(['id' => $this->id, 'alias' => $this->alias]))) {
+            if (!is_null($this->alias) && !is_null($sources = self::findOne(['alias' => $this->alias])))
+                $this->addError('alias', Yii::t('app/modules/translations', 'Alias key must be unique.'));
+        }
     }
 
     /**
