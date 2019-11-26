@@ -52,15 +52,12 @@ class Translations extends ActiveRecord
                 ],
                 'value' => new Expression('NOW()'),
             ],
-        ];
-
-        if (class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users'])) {
-            $behaviors['blameable'] = [
+            'blameable' =>  [
                 'class' => BlameableBehavior::className(),
                 'createdByAttribute' => 'created_by',
                 'updatedByAttribute' => 'updated_by',
-            ];
-        }
+            ],
+        ];
 
         return $behaviors;
     }
