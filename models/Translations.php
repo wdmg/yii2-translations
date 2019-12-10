@@ -45,7 +45,7 @@ class Translations extends ActiveRecord
     {
         $behaviors = [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
@@ -53,7 +53,7 @@ class Translations extends ActiveRecord
                 'value' => new Expression('NOW()'),
             ],
             'blameable' =>  [
-                'class' => BlameableBehavior::className(),
+                'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'created_by',
                 'updatedByAttribute' => 'updated_by',
             ],
@@ -134,7 +134,7 @@ class Translations extends ActiveRecord
     public function getLanguages()
     {
         if(class_exists('\wdmg\translations\models\Languages'))
-            return $this->hasOne(\wdmg\translations\models\Languages::className(), ['locale' => 'language']);
+            return $this->hasOne(\wdmg\translations\models\Languages::class, ['locale' => 'language']);
         else
             return null;
     }
@@ -145,7 +145,7 @@ class Translations extends ActiveRecord
     public function getCategory()
     {
         if(class_exists('\wdmg\translations\models\Sources'))
-            return $this->hasOne(\wdmg\translations\models\Sources::className(), ['id' => 'id']);
+            return $this->hasOne(\wdmg\translations\models\Sources::class, ['id' => 'id']);
         else
             return null;
     }
@@ -156,7 +156,7 @@ class Translations extends ActiveRecord
     public function getSources()
     {
         if(class_exists('\wdmg\translations\models\Sources'))
-            return $this->hasOne(\wdmg\translations\models\Sources::className(), ['id' => 'id']);
+            return $this->hasOne(\wdmg\translations\models\Sources::class, ['id' => 'id']);
         else
             return null;
     }
@@ -167,7 +167,7 @@ class Translations extends ActiveRecord
     public function getUser()
     {
         if(class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users']))
-            return $this->hasOne(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
+            return $this->hasOne(\wdmg\users\models\Users::class, ['id' => 'created_by']);
         else
             return null;
     }

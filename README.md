@@ -60,6 +60,6 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.1.1.1 - Fixed deprecated class declaration
 * v.1.1.0 - CRUD for translations
 * v.1.0.1 - Added console scan for sources and translations
-* v.1.0.0 - Added base module, model, controllers and migrations

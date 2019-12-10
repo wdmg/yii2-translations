@@ -172,7 +172,7 @@ if (is_array($locales)) {
             <?= $form->field($model, 'languages', [
                 'options' => [
                     'tag' => false
-                ]])->label(false)->widget(SelectInput::className(), [
+                ]])->label(false)->widget(SelectInput::class, [
                 'items' => $languages,
                 'options' => [
                     'class' => 'form-control',

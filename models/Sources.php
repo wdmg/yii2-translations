@@ -45,7 +45,7 @@ class Sources extends ActiveRecord
     {
         $behaviors = [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
@@ -53,7 +53,7 @@ class Sources extends ActiveRecord
                 'value' => new Expression('NOW()'),
             ],
             'sluggable' =>  [
-                'class' => SluggableBehavior::className(),
+                'class' => SluggableBehavior::class,
                 'attribute' => ['message'],
                 'slugAttribute' => 'alias',
                 'ensureUnique' => true,
@@ -64,7 +64,7 @@ class Sources extends ActiveRecord
                 }
             ],
             'blameable' =>  [
-                'class' => BlameableBehavior::className(),
+                'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'created_by',
                 'updatedByAttribute' => 'updated_by',
             ],
@@ -155,7 +155,7 @@ class Sources extends ActiveRecord
     public function getUser()
     {
         if(class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users']))
-            return $this->hasOne(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
+            return $this->hasOne(\wdmg\users\models\Users::class, ['id' => 'created_by']);
         else
             return null;
     }

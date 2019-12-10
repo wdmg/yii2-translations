@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.1.1 (2019-12-10)
+ * Fixed deprecated class declaration
+
 ## 1.1.0 (2019-10-15)
  * CRUD for translations
  

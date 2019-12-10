@@ -17,7 +17,7 @@ use yii\widgets\Pjax;
         'enableClientValidation' => true,
         'enableAjaxValidation' => true
     ]); ?>
-    <?= $form->field($model, 'language')->widget(SelectInput::className(), [
+    <?= $form->field($model, 'language')->widget(SelectInput::class, [
         'items' => $languages,
         'options' => [
             'class' => 'form-control'
@@ -27,7 +27,7 @@ use yii\widgets\Pjax;
     <?= $form->field($model, 'message')->textarea(['rows' => 6]) ?>
     <?= $form->field($model, 'alias')->textInput(['maxlength' => true]) ?>
     <?= $form->field($model, 'translation')->textarea(['rows' => 6]) ?>
-    <?= $form->field($model, 'status')->widget(SelectInput::className(), [
+    <?= $form->field($model, 'status')->widget(SelectInput::class, [
         'items' => $status,
         'options' => [
             'class' => 'form-control'

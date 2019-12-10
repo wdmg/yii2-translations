@@ -52,7 +52,7 @@ class Languages extends ActiveRecord
     {
         $behaviors = [
             'timestamp' => [
-                'class' => TimestampBehavior::className(),
+                'class' => TimestampBehavior::class,
                 'attributes' => [
                     ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
                     ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
@@ -60,7 +60,7 @@ class Languages extends ActiveRecord
                 'value' => new Expression('NOW()'),
             ],
             'blameable' =>  [
-                'class' => BlameableBehavior::className(),
+                'class' => BlameableBehavior::class,
                 'createdByAttribute' => 'created_by',
                 'updatedByAttribute' => 'updated_by',
             ],
@@ -176,7 +176,7 @@ class Languages extends ActiveRecord
     public function getUser()
     {
         if(class_exists('\wdmg\users\models\Users') && isset(Yii::$app->modules['users']))
-            return $this->hasOne(\wdmg\users\models\Users::className(), ['id' => 'created_by']);
+            return $this->hasOne(\wdmg\users\models\Users::class, ['id' => 'created_by']);
         else
             return null;
     }
