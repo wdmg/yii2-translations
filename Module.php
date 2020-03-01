@@ -106,7 +106,7 @@ class Module extends BaseModule
         $items = [
             'label' => $this->name,
             'url' => '#',
-            'icon' => 'fa-language',
+            'icon' => 'fa fa-fw fa-language',
             'active' => in_array(\Yii::$app->controller->module->id, [$this->id]),
             'items' => [
                 [
