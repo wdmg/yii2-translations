@@ -30,6 +30,11 @@ return [
     'Updated by' => "Автор изменений",
     'Actions' => 'Действия',
 
+    'First page' => 'Первая страница',
+    'Last page' => 'Последняя страница',
+    '&larr; Prev page' => '&larr; Предыдущая страница',
+    'Next page &rarr;' => 'Следующая страница &rarr;',
+
     'Translation details' => 'Подробности перевода',
 
     '&larr; Back to list' => '&larr; Назад к списку',

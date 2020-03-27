@@ -113,7 +113,22 @@ $module = $this->context->module;
                     }
                 ],
             ]
-        ]
+        ],
+        'pager' => [
+            'options' => [
+                'class' => 'pagination',
+            ],
+            'maxButtonCount' => 5,
+            'activePageCssClass' => 'active',
+            'prevPageCssClass' => '',
+            'nextPageCssClass' => '',
+            'firstPageCssClass' => 'previous',
+            'lastPageCssClass' => 'next',
+            'firstPageLabel' => Yii::t('app/modules/translations', 'First page'),
+            'lastPageLabel'  => Yii::t('app/modules/translations', 'Last page'),
+            'prevPageLabel'  => Yii::t('app/modules/translations', '&larr; Prev page'),
+            'nextPageLabel'  => Yii::t('app/modules/translations', 'Next page &rarr;')
+        ],
     ]); ?>
     <?php Pjax::end(); ?>
     <hr/>

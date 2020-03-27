@@ -206,7 +206,22 @@ if (is_array($locales)) {
                     },
                 ],
             ]
-        ]
+        ],
+        'pager' => [
+            'options' => [
+                'class' => 'pagination',
+            ],
+            'maxButtonCount' => 5,
+            'activePageCssClass' => 'active',
+            'prevPageCssClass' => '',
+            'nextPageCssClass' => '',
+            'firstPageCssClass' => 'previous',
+            'lastPageCssClass' => 'next',
+            'firstPageLabel' => Yii::t('app/modules/translations', 'First page'),
+            'lastPageLabel'  => Yii::t('app/modules/translations', 'Last page'),
+            'prevPageLabel'  => Yii::t('app/modules/translations', '&larr; Prev page'),
+            'nextPageLabel'  => Yii::t('app/modules/translations', 'Next page &rarr;')
+        ],
     ]); ?>
     <hr/>
     <div class="modules-add-form">
