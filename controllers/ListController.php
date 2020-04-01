@@ -145,6 +145,8 @@ class ListController extends Controller
             );
         } else {
 
+            // @TODO: Split this stuff to standalone method
+
             // Get available translations
             $translationsList = [];
             foreach ($langList as $lang) {
@@ -165,11 +167,12 @@ class ListController extends Controller
                             $sourcesModel->language = $lang;
                             $sourcesModel->category = $category;
                             $sourcesModel->message = $message;
-                            $sourcesModel->alias = $sourcesModel->getStringAlias($message);
+                            $sourcesModel->alias = $sourcesModel->getStringAlias($message); // @TODO: Issue, where alias key must be unique.
                             $sourcesModel->created_at = new yii\db\Expression('NOW()');
                             $sourcesModel->created_by = Yii::$app->getUser()->id;
                             $sourcesModel->updated_at = new yii\db\Expression('NOW()');
                             $sourcesModel->updated_by = Yii::$app->getUser()->id;
+
                             if ($sourcesModel->validate()) {
                                 $insertRows[] = $sourcesModel;
                                 $sourceCount++;
@@ -186,6 +189,7 @@ class ListController extends Controller
                                     )
                                 );
                             }
+
                         }
                     }
                 }

@@ -75,7 +75,7 @@ class Module extends BaseModule
     /**
      * @var bool whether to enable caching translated messages
      */
-    public $enableCaching = false;
+    public $enableCaching = true;
 
     /**
      * @var int the time in seconds that the messages can remain valid in cache (only for  use with `DbMessageSource`).
@@ -215,7 +215,6 @@ class Module extends BaseModule
             $cachingDuration = intval($this->cachingDuration);
 
         if ($from_db) {
-
             Yii::$app->i18n->translations['app/modules/' . $module->id] = [
                 'class' => 'yii\i18n\DbMessageSource',
                 'sourceLanguage' => $sourceLanguage,

@@ -145,6 +145,8 @@ class InitController extends Controller
                 return ExitCode::UNSPECIFIED_ERROR;
             } else {
 
+                // @TODO: Split this stuff to standalone method
+
                 // Get available translations
                 $translationsList = [];
                 foreach ($langList as $lang) {
@@ -164,7 +166,7 @@ class InitController extends Controller
                             $sourcesModel->language = $lang;
                             $sourcesModel->category = $category;
                             $sourcesModel->message = $message;
-                            $sourcesModel->alias = $sourcesModel->getStringAlias($message);
+                            $sourcesModel->alias = $sourcesModel->getStringAlias($message);  // @TODO: Issue, where alias key must be unique.
                             $sourcesModel->created_at = new yii\db\Expression('NOW()');
                             $sourcesModel->created_by = 0;
                             $sourcesModel->updated_at = new yii\db\Expression('NOW()');
