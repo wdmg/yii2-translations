@@ -107,8 +107,7 @@ class LangsController extends Controller
         // Change model status (aJax request by switcher)
         if (Yii::$app->request->isAjax) {
             if (Yii::$app->request->get('change') == "status") {
-                if (Yii::$app->request->post('id', null)) {
-                    $id = Yii::$app->request->post('id');
+                if ($id = Yii::$app->request->post('id', null)) {
                     $status = Yii::$app->request->post('value', 0);
                     if ($model = $model->findOne(['id' => intval($id)])) {
                         if (intval($model->is_default) == 0 || intval($model->is_system) == 0) {
@@ -117,6 +116,18 @@ class LangsController extends Controller
                             else
                                 return false;
                         }
+                    } else {
+                        return false;
+                    }
+                }
+            } elseif (Yii::$app->request->get('change') == "is_frontend") {
+                if ($id = Yii::$app->request->post('id', null)) {
+                    $is_frontend = Yii::$app->request->post('value', 0);
+                    if ($model = $model->findOne(['id' => intval($id)])) {
+                        if ($model->updateAttributes(['is_frontend' => intval($is_frontend)]))
+                            return true;
+                        else
+                            return false;
                     } else {
                         return false;
                     }
@@ -203,10 +214,21 @@ class LangsController extends Controller
         }
 
         // Get the list of supported locales without already installed
-        $languages = $model::getAllLanguages(false);
+        $languages = $model::getAllLanguages(false, false, true);
+        $supported = ArrayHelper::map($languages, 'id', 'locale');
+
         foreach ($module->getLocales() as $data) {
-            if (!in_array($data['locale'], array_keys($languages)))
-                $locales[] = $data;
+            if (is_object($data)) {
+                if (isset($data->locale)) {
+                    if (!in_array($data->locale, $supported))
+                        $locales[] = $data;
+                }
+            } elseif (is_array($data)) {
+                if (isset($data['locale'])) {
+                    if (!in_array($data['locale'], $supported))
+                        $locales[] = $data;
+                }
+            }
         }
 
         return $this->render('index', [

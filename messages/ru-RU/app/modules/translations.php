@@ -21,7 +21,9 @@ return [
     'Translation' => 'Перевод',
     'Is default?' => 'По-умолчанию?',
     'Is system?' => 'Системный?',
+    'In frontend?' => 'Фронтенд?',
     'Status' => 'Статус',
+    'All statuses' => 'Все статусы',
     'Active' => 'Активен',
     'Not active' => 'Не активен',
     'Created' => "Создано",
@@ -29,6 +31,8 @@ return [
     'Created by' => "Автор создания",
     'Updated by' => "Автор изменений",
     'Actions' => 'Действия',
+
+    'All languages' => 'Все языки',
 
     'First page' => 'Первая страница',
     'Last page' => 'Последняя страница',

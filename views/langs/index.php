@@ -62,13 +62,19 @@ if (is_array($locales)) {
                     else
                         return $flag . '&nbsp;' . $data->name;
                 }
-            ],
-
-            [
+            ], [
                 'attribute' => 'is_default',
                 'label' => Yii::t('app/modules/translations', 'Is default?'),
-                'filter' => true,
-                'format' => 'html',
+                'format' => 'raw',
+                'filter' => SelectInput::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'is_default',
+                    'items' => $searchModel->getStatusesList(true),
+                    'options' => [
+                        'id' => 'langs-default',
+                        'class' => 'form-control'
+                    ]
+                ]),
                 'headerOptions' => [
                     'class' => 'text-center'
                 ],
@@ -78,16 +84,24 @@ if (is_array($locales)) {
                 'value' => function($data) {
 
                     if ($data->is_default)
-                        return '<span class="glyphicon glyphicon-check text-success"></span>';
+                        return '<span class="fa fa-check text-success"></span>';
                     else
-                        return '<span class="glyphicon glyphicon-check text-muted"></span>';
+                        return '<span class="fa fa-check text-muted disabled"></span>';
 
                 }
             ], [
                 'attribute' => 'is_system',
                 'label' => Yii::t('app/modules/translations', 'Is system?'),
-                'filter' => true,
-                'format' => 'html',
+                'format' => 'raw',
+                'filter' => SelectInput::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'is_system',
+                    'items' => $searchModel->getStatusesList(true),
+                    'options' => [
+                        'id' => 'langs-system',
+                        'class' => 'form-control'
+                    ]
+                ]),
                 'headerOptions' => [
                     'class' => 'text-center'
                 ],
@@ -97,14 +111,49 @@ if (is_array($locales)) {
                 'value' => function($data) {
 
                     if ($data->is_system)
-                        return '<span class="glyphicon glyphicon-check text-success"></span>';
+                        return '<span class="fa fa-check text-success"></span>';
                     else
-                        return '<span class="glyphicon glyphicon-check text-muted"></span>';
+                        return '<span class="fa fa-check text-muted disabled"></span>';
 
+                }
+            ], [
+                'attribute' => 'is_frontend',
+                'label' => Yii::t('app/modules/translations', 'In frontend?'),
+                'format' => 'raw',
+                'filter' => SelectInput::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'is_frontend',
+                    'items' => $searchModel->getStatusesList(true),
+                    'options' => [
+                        'id' => 'langs-frontend',
+                        'class' => 'form-control'
+                    ]
+                ]),
+                'headerOptions' => [
+                    'class' => 'text-center'
+                ],
+                'contentOptions' => [
+                    'class' => 'text-center'
+                ],
+                'value' => function($data) {
+                    if ($data->is_frontend) {
+                        return '<div id="switcher-' . $data->id . '" data-attribute="is_frontend" data-value-current="' . $data->is_frontend . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-default">OFF</button><button data-value="1" class="btn btn-xs btn-primary">ON</button></div>';
+                    } else {
+                        return '<div id="switcher-' . $data->id . '" data-attribute="is_frontend" data-value-current="' . $data->is_frontend . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-danger">OFF</button><button data-value="1" class="btn btn-xs btn-default">ON</button></div>';
+                    }
                 }
             ], [
                 'attribute' => 'status',
                 'format' => 'raw',
+                'filter' => SelectInput::widget([
+                    'model' => $searchModel,
+                    'attribute' => 'status',
+                    'items' => $searchModel->getStatusesList(true),
+                    'options' => [
+                        'id' => 'langs-status',
+                        'class' => 'form-control'
+                    ]
+                ]),
                 'headerOptions' => [
                     'class' => 'text-center'
                 ],
@@ -121,9 +170,9 @@ if (is_array($locales)) {
 
                     } else {
                         if ($data->status == $data::LANGUAGE_STATUS_ACTIVE) {
-                            return '<div id="switcher-' . $data->id . '" data-value-current="' . $data->status . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-default">OFF</button><button data-value="1" class="btn btn-xs btn-primary">ON</button></div>';
+                            return '<div id="switcher-' . $data->id . '" data-attribute="status" data-value-current="' . $data->status . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-default">OFF</button><button data-value="1" class="btn btn-xs btn-primary">ON</button></div>';
                         } else {
-                            return '<div id="switcher-' . $data->id . '" data-value-current="' . $data->status . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-danger">OFF</button><button data-value="1" class="btn btn-xs btn-default">ON</button></div>';
+                            return '<div id="switcher-' . $data->id . '" data-attribute="status" data-value-current="' . $data->status . '" data-id="' . $data->id . '" data-toggle="button-switcher" class="btn-group btn-toggle"><button data-value="0" class="btn btn-xs btn-danger">OFF</button><button data-value="1" class="btn btn-xs btn-default">ON</button></div>';
                         }
                     }
                 }
@@ -274,10 +323,11 @@ if (is_array($locales)) {
     if ($container.length > 0) {
         $container.delegate(\'[data-toggle="button-switcher"] button\', \'click\', function() {
             var id = $(this).parent(\'.btn-group\').data(\'id\');
+            var attribute = $(this).parent(\'.btn-group\').data(\'attribute\');
             var value = $(this).data(\'value\');
              $.ajax({
                 type: "POST",
-                url: requestURL + \'?change=status\',
+                url: requestURL + \'?change=\' + attribute,
                 dataType: \'json\',
                 data: {\'id\': id, \'value\': value},
                 complete: function(data) {

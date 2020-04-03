@@ -360,7 +360,6 @@ class Module extends BaseModule
         if ($data = \Locale::parseLocale($locale)) {
 
             $short = $data['language'];
-
             if (isset($data['region']))
                 $locale = $data['language'].'-'.$data['region'];
             else
@@ -403,5 +402,12 @@ class Module extends BaseModule
     public function bootstrap($app)
     {
         parent::bootstrap($app);
+
+        // Configure translations component
+        $app->setComponents([
+            'translations' => [
+                'class' => 'wdmg\translations\components\Translations'
+            ]
+        ]);
     }
 }

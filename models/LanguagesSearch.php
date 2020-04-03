@@ -18,7 +18,7 @@ class LanguagesSearch extends Languages
     {
         return [
             [['id'], 'integer'],
-            [['url', 'locale', 'name', 'is_default', 'is_system', 'status'], 'safe'],
+            [['url', 'locale', 'name', 'is_default', 'is_system', 'is_frontend', 'status'], 'safe'],
         ];
     }
 
@@ -63,9 +63,16 @@ class LanguagesSearch extends Languages
 
         $query->andFilterWhere(['like', 'url', $this->url])
             ->andFilterWhere(['like', 'locale', $this->locale])
-            ->andFilterWhere(['like', 'name', $this->name])
-            ->andFilterWhere(['like', 'is_default', $this->is_default])
-            ->andFilterWhere(['like', 'is_system', $this->is_system]);
+            ->andFilterWhere(['like', 'name', $this->name]);
+
+        if($this->is_default !== "*")
+            $query->andFilterWhere(['like', 'is_default', $this->is_default]);
+
+        if($this->is_system !== "*")
+            $query->andFilterWhere(['like', 'is_system', $this->is_system]);
+
+        if($this->is_frontend !== "*")
+            $query->andFilterWhere(['like', 'is_frontend', $this->is_frontend]);
 
         if($this->status !== "*")
             $query->andFilterWhere(['like', 'status', $this->status]);

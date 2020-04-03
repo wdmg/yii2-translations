@@ -21,6 +21,7 @@ use yii\behaviors\BlameableBehavior;
  * @property string $name
  * @property integer $is_default
  * @property integer $is_system
+ * @property integer $is_frontend
  * @property integer $status
  * @property string $created_at
  * @property integer $created_by
@@ -79,7 +80,7 @@ class Languages extends ActiveRecord
             ['url', 'string', 'max' => 3],
             ['locale', 'string', 'max' => 10],
             ['name', 'string', 'max' => 64],
-            [['autoActivate', 'is_default', 'is_system', 'status'], 'boolean'],
+            [['autoActivate', 'is_default', 'is_system', 'is_frontend', 'status'], 'boolean'],
             [['autoActivate'], 'default', 'value' => 1],
             [['created_at', 'updated_at'], 'safe'],
         ];
@@ -103,6 +104,7 @@ class Languages extends ActiveRecord
             'name' => Yii::t('app/modules/translations', 'Name'),
             'is_default' => Yii::t('app/modules/translations', 'Is default?'),
             'is_system' => Yii::t('app/modules/translations', 'Is system?'),
+            'is_frontend' => Yii::t('app/modules/translations', 'Frontend?'),
             'status' => Yii::t('app/modules/translations', 'Status'),
             'languages' => Yii::t('app/modules/translations', 'Languages'),
             'autoActivate' => Yii::t('app/modules/translations', '- auto activate'),
@@ -126,23 +128,31 @@ class Languages extends ActiveRecord
      * Get availables languages
      *
      * @note Function get languages list from DB
-     * @param $onlyActive boolean flag, if need only active languages
-     * @return array of modules
+     * @param bool $onlyActive
+     * @param bool $onlyFrontend
+     * @param bool $asArray
+     * @return \yii\db\ActiveQuery
      */
-    public static function getAllLanguages($onlyActive = true)
+    public static function getAllLanguages($onlyActive = true, $onlyFrontend = false, $asArray = false)
     {
+        $languages = self::find();
+
         if ($onlyActive)
-            $cond = ['status' => self::LANGUAGE_STATUS_ACTIVE];
-        else
-            $cond = '`status` >= ' . self::LANGUAGE_STATUS_DISABLED;
+            $languages->where([
+                'status' => self::LANGUAGE_STATUS_ACTIVE,
+            ]);
 
-        $modules = self::find()
-            ->where($cond)
-            ->asArray()
-            ->indexBy('locale')
-            ->all();
+        if ($onlyFrontend)
+            $languages->where([
+                'is_frontend' => 1
+            ]);
 
-        return $modules;
+        $languages->indexBy('locale');
+
+        if ($asArray)
+            $languages->asArray();
+
+        return $languages->all();
     }
 
     /**
@@ -190,5 +200,43 @@ class Languages extends ActiveRecord
             return $this->hasOne(\wdmg\users\models\Users::class, ['id' => 'updated_by']);
         else
             return $this->updated_by;
+    }
+
+    /**
+     * @return array
+     */
+    public function getLanguagesList($allLanguages = false)
+    {
+        $list = [];
+        if ($allLanguages) {
+            $list = [
+                '*' => Yii::t('app/modules/translations', 'All languages')
+            ];
+        }
+
+        $languages = $this->getAllLanguages(false, false, true);
+        $list = ArrayHelper::merge($list, ArrayHelper::map($languages, 'locale', 'name'));
+
+        return $list;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStatusesList($allStatuses = false)
+    {
+        $list = [];
+        if ($allStatuses) {
+            $list = [
+                '*' => Yii::t('app/modules/translations', 'All statuses')
+            ];
+        }
+
+        $list = ArrayHelper::merge($list, [
+            self::LANGUAGE_STATUS_DISABLED => Yii::t('app/modules/translations', 'Not active'),
+            self::LANGUAGE_STATUS_ACTIVE => Yii::t('app/modules/translations', 'Active'),
+        ]);
+
+        return $list;
     }
 }
