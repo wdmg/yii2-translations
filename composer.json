@@ -35,11 +35,14 @@
   "extra": {
     "options": {
       "routePrefix": "admin",
-      "locales": ["en", "en-US", "uk", "uk-UA", "ru", "ru-RU", "de", "de-DE", "fr", "fr-FR", "hi", "hi-IN"],
       "forceTranslation": false,
+      "supportLocales": ["en", "en-US", "uk", "uk-UA", "ru", "ru-RU", "de", "de-DE", "fr", "fr-FR", "hi", "hi-IN"],
       "sourceLanguage": "en-US",
       "enableCaching": true,
-      "cachingDuration": 3600
+      "cachingDuration": 3600,
+      "languageScheme": "before",
+      "languageOpenGraph": true,
+      "languageHrefLang": true
     }
   }
 }

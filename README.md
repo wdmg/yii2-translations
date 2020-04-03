@@ -40,7 +40,7 @@ To add a module to the project, add the following data in your configuration fil
         'translations' => [
             'class' => 'wdmg\translations\Module',
             'routePrefix' => 'admin',
-            'locales' => ["en", "en-US", "uk", "uk-UA", "ru", "ru-RU", "de", "de-DE", "fr", "fr-FR", "hi", "hi-IN"], // support languages (locales)
+            'supportLocales' => ["en", "en-US", "uk", "uk-UA", "ru", "ru-RU", "de", "de-DE", "fr", "fr-FR", "hi", "hi-IN"], // support languages (locales)
             'forceTranslation' => false, // force message translation when the source and target languages are the same
             'sourceLanguage' => 'en-US', // the language of the original messages
             'enableCaching' => false, // enable caching translated messages
