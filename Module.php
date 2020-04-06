@@ -18,6 +18,7 @@ use Yii;
 use wdmg\base\BaseModule;
 use wdmg\translations\models\Translations;
 use wdmg\translations\models\Languages;
+use yii\helpers\ArrayHelper;
 use \yii\helpers\FileHelper;
 
 /**
@@ -97,6 +98,13 @@ class Module extends BaseModule
     public $languageScheme = 'before';
 
     /**
+     * UrlManager configuration
+     *
+     * @var array
+     */
+    public $urlManagerConfig = [];
+
+    /**
      * Add OpenGraph markup
      *
      * @var bool
@@ -123,10 +131,43 @@ class Module extends BaseModule
         $this->setPriority($this->priority);
 
         // Language Scheme (position in URL)
-        if (isset(Yii::$app->params['translations.languageScheme']))
+        if (empty($this->languageScheme) && isset(Yii::$app->params['translations.languageScheme']))
             $this->languageScheme = Yii::$app->params['translations.languageScheme'];
         else
             $this->languageScheme = 'before';
+
+        // Configure UrlManager
+        if (empty($this->urlManagerConfig) && isset(Yii::$app->params['translations.urlManagerConfig']))
+            $this->urlManagerConfig = Yii::$app->params['translations.urlManagerConfig'];
+        else
+            $this->urlManagerConfig = [
+                'enablePrettyUrl' => true,
+                'showScriptName' => false,
+                'enableStrictParsing' => true,
+                'suffix' => '/',
+                'rules' => [
+                    '/' => 'site/index',
+                    '<action:admin>' => 'admin/<action>',
+                    '<action:\w+(?!admin)>' => 'site/<action>',
+                ]
+            ];
+
+        // Add to UrlManager::baseUrl for console process
+        if (Yii::$app instanceof \yii\console\Application) {
+
+            if (!isset($this->urlManagerConfig['hostInfo']) && isset(Yii::$app->params['urlManager.hostInfo'])) {
+                $hostInfo = Yii::$app->params['urlManager.hostInfo'];
+                $this->urlManagerConfig['hostInfo'] = $hostInfo;
+                $_SERVER['SERVER_NAME'] = $hostInfo;
+            }
+
+            if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.baseUrl'])) {
+                $baseUrl = Yii::$app->params['urlManager.baseUrl'];
+                $this->urlManagerConfig['baseUrl'] = $baseUrl;
+                $_SERVER['HTTP_HOST'] = $baseUrl;
+            }
+
+        }
 
         // Add OpenGraph markup
         if (isset(Yii::$app->params['translations.languageOpenGraph']))
@@ -453,5 +494,21 @@ class Module extends BaseModule
                 'class' => 'wdmg\translations\components\Translations'
             ]
         ]);
+
+        if (!Yii::$app instanceof \yii\console\Application) {
+            // Configure UrlManager
+            if (!$this->isBackend()) {
+                $config = [
+                    'class' => 'wdmg\translations\components\UrlManager'
+                ];
+
+                $config = ArrayHelper::merge($this->urlManagerConfig, $config);
+                    $app->setComponents([
+                    'urlManager' => [
+                        'class' => 'wdmg\translations\components\UrlManager',
+                    ]
+                ]);
+            }
+        }
     }
 }

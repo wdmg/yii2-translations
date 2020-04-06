@@ -37,6 +37,7 @@ class Languages extends ActiveRecord
 
     public $languages;
     public $autoActivate;
+    public static $current = null; // Переменная, для хранения текущего объекта языка
 
     /**
      * {@inheritdoc}
@@ -238,5 +239,40 @@ class Languages extends ActiveRecord
         ]);
 
         return $list;
+    }
+
+    // Получение текущего объекта языка
+    public static function getCurrentLang() {
+        if (is_null(self::$current)) {
+            self::$current = self::getDefaultLang();
+        }
+        return self::$current;
+    }
+
+    // Установка текущего объекта языка и локаль пользователя
+    public static function setCurrent($url = null) {
+        $language = self::getLangByUrl($url);
+        self::$current = (is_null($language)) ? self::getDefaultLang() : $language;
+        Yii::$app->language = self::$current->local;
+    }
+
+    // Получения объекта языка по умолчанию
+    public static function getDefaultLang() {
+        return self::find()->where('`is_default` = :is_default', [':is_default' => 1])->one();
+    }
+
+    // Получения объекта языка по буквенному идентификатору
+    public static function getLangByUrl($url = null)
+    {
+        if (is_null($url)) {
+            return null;
+        } else {
+            $language = self::find()->where('url = :url', [':url' => $url])->one();
+            if (is_null($language)) {
+                return null;
+            } else {
+                return $language;
+            }
+        }
     }
 }

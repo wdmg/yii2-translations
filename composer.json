@@ -41,6 +41,7 @@
       "enableCaching": true,
       "cachingDuration": 3600,
       "languageScheme": "before",
+      "urlManagerConfig": [],
       "languageOpenGraph": true,
       "languageHrefLang": true
     }

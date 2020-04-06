@@ -45,6 +45,11 @@ To add a module to the project, add the following data in your configuration fil
             'sourceLanguage' => 'en-US', // the language of the original messages
             'enableCaching' => false, // enable caching translated messages
             'cachingDuration' => 3600 // time in seconds that the messages can be cached
+            'languageScheme' => 'before', // language Scheme (position in URL): before (by default), after, query, subdomain
+            'urlManagerConfig' => [], // UrlManager configuration
+            'languageOpenGraph' => true, // add OpenGraph markup
+            'languageHrefLang' => true, // add HrefLang attribute
+            ...
         ],
         ...
     ],

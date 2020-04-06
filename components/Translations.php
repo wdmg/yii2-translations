@@ -22,7 +22,7 @@ use yii\helpers\ArrayHelper;
 
 class Translations extends Component
 {
-    protected $module;
+    public $module;
     protected $languages;
     protected $translations;
     protected $sources;
