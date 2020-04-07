@@ -38,16 +38,44 @@ class UrlManager extends BaseUrlManager
         return parent::init();
     }
 
+    /**
+     * Generates an absolute URL based on language settings.
+     *
+     * @param array|string $params
+     * @param null $scheme
+     * @return string
+     * @throws InvalidConfigException
+     */
+    public function createAbsoluteUrl($params, $scheme = null)
+    {
+        $params = (array) $params;
+        $url = self::createUrl($params, true);
+
+        if (strpos($url, '://') === false) {
+            $hostInfo = $this->getHostInfo();
+            if (strncmp($url, '//', 2) === 0) {
+                $url = substr($hostInfo, 0, strpos($hostInfo, '://')) . ':' . $url;
+            } else {
+                $url = $hostInfo . $url;
+            }
+        }
+
+        return Url::ensureScheme($url, $scheme);
+    }
+
+    /**
+     * Generates a URL based on language settings. Also used as a helper function for the createAbsoluteUrl() method.
+     *
+     * @param array|string $params
+     * @param bool $withScheme
+     * @return mixed|string
+     */
     public function createUrl($params, $withScheme = false)
     {
-
-        if ($withScheme)
-            return parent::createAbsoluteUrl($params);
-
         $lang = null;
         if (isset($params['lang'])) {
-            // Если указан идентефикатор языка, то делаем попытку найти язык в БД,
-            // иначе работаем с языком по умолчанию
+            // If the language identifier is specified, then we try to find the language in the database,
+            // otherwise we work with the default language
             if (!($lang = $this->languages->findOne(['locale' => $params['lang']]))) {
                 $lang = $this->languages->getDefaultLang();
                 $lang = Yii::$app->sourceLanguage;
@@ -55,43 +83,55 @@ class UrlManager extends BaseUrlManager
 
             unset($params['lang']);
         } else {
-            // Если не указан параметр языка, то работаем с текущим языком
+            // If the language parameter is not specified, then we work with the current language
             $lang = $this->languages->getCurrentLang();
         }
 
         $url = parent::createUrl($params);
+        if ($url && isset($this->module->languageScheme) && !is_null($lang)) {
 
-        if (isset($this->module->languageScheme) && !is_null($lang)) {
             switch ($this->module->languageScheme) {
                 case "after":
-                    return ($url == '/') ? $lang->url : $url . $lang->url; // `/en` or `/site/index/en`
+
+                    return ($url == '/') ? $lang->url : $url . $lang->url; // `http://example.com/site/index/en`
 
                 case "query":
-                    return ($url == '/') ? '?lang=' . $lang->url : $url . '?lang='. $lang->url; // `/?lang=en` or `/site/index/?lang=en`
+
+                    return ($url == '/') ? '?lang=' . $lang->url : $url . '?lang='. $lang->url; // `http://example.com/site/index/?lang=en`
 
                 case "subdomain":
 
-                    if ($withScheme) {
-                        $subdomain = str_replace('://', '://' . $lang->url . '.', $url); // `http://en.example.com/` or `http://en.example.com/site/index`
-                        return $subdomain;
-                    } else {
-                        $subdomain = str_replace('://', '://' . $lang->url . '.', Url::base(true)); // `http://en.example.com/` or `http://en.example.com/site/index`
+                    if (!$baseUrl = trim($this->baseUrl))
+                        $baseUrl = Url::base(true);
+
+                    if ($withScheme) { // `http://en.example.com/site/index`
+                        if (mb_strpos($url, $baseUrl) !== false)
+                            return str_replace('://', '://' . $lang->url . '.', $url);
+                        else
+                            return str_replace('://', '://' . $lang->url . '.', $baseUrl) . $url;
+                    } else { // `http://en.example.com/site/index`
+                        $subdomain = str_replace('://', '://' . $lang->url . '.', $baseUrl);
                         return ($url == '/') ? $subdomain . '/' : $subdomain . $url;
                     }
 
                 default:
 
-                    if ($withScheme)
-                        return $url; // `http://example.com/en` or `http://example.com/en/site/index`
-                    else
+                    if (!$baseUrl = trim($this->baseUrl))
+                        $baseUrl = Url::base(true);
+
+                    if ($withScheme) {  // `http://example.com/en/site/index`
+                        if (mb_strpos($url, $baseUrl) !== false)
+                            return str_replace($baseUrl, $baseUrl . '/' . $lang->url, $url);
+                        else
+                            return $baseUrl . '/' . $lang->url . $url;
+                    } else {
                         return ($url == '/') ? '/' . $lang->url : '/' . $lang->url . $url; // `/en` or `/en/site/index`
+                    }
 
             }
+
         } else {
-            if ($withScheme)
-                return ($url == '/') ? '/' : '/' . $url; // `http://example.com/` or `http://example.com/site/index`
-            else
-                return ($url == '/') ? '/' : '/' . $url; // `/` or `/site/index`
+            return ($url == '/') ? '/' : '/' . $url; // `/` or `/site/index`
         }
     }
 }

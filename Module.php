@@ -155,15 +155,10 @@ class Module extends BaseModule
         // Add to UrlManager::baseUrl for console process
         if (Yii::$app instanceof \yii\console\Application) {
 
-            if (!isset($this->urlManagerConfig['hostInfo']) && isset(Yii::$app->params['urlManager.hostInfo'])) {
-                $hostInfo = Yii::$app->params['urlManager.hostInfo'];
-                $this->urlManagerConfig['hostInfo'] = $hostInfo;
-                $_SERVER['SERVER_NAME'] = $hostInfo;
-            }
-
             if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.baseUrl'])) {
                 $baseUrl = Yii::$app->params['urlManager.baseUrl'];
                 $this->urlManagerConfig['baseUrl'] = $baseUrl;
+                $this->urlManagerConfig['hostInfo'] = null;
                 $_SERVER['HTTP_HOST'] = $baseUrl;
             }
 
@@ -498,16 +493,10 @@ class Module extends BaseModule
         if (!Yii::$app instanceof \yii\console\Application) {
             // Configure UrlManager
             if (!$this->isBackend()) {
-                $config = [
+                $config = ArrayHelper::merge($this->urlManagerConfig, [
                     'class' => 'wdmg\translations\components\UrlManager'
-                ];
-
-                $config = ArrayHelper::merge($this->urlManagerConfig, $config);
-                    $app->setComponents([
-                    'urlManager' => [
-                        'class' => 'wdmg\translations\components\UrlManager',
-                    ]
                 ]);
+                $app->setComponents($config);
             }
         }
     }
