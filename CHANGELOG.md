@@ -1,7 +1,7 @@
 Changelog
 =========
 
-## 1.1.*
+## 1.2.0 (2020-04-09)
  * Added preparePattern() and parseRequest() methods to UrlManager
  * Add createAbsoluteUrl() method, remove hostInfo from config
  * Added `languageScheme`, `urlManagerConfig`, `languageOpenGraph` and `languageHrefLang` module properties
