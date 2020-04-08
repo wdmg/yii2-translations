@@ -45,7 +45,7 @@ class Translations extends Component
     }
 
     /**
-     * Return active locales as AR object or array
+     * Return locales as AR object or array
      *
      * @param bool $onlyFrontend
      * @param bool $asArray
@@ -56,6 +56,13 @@ class Translations extends Component
         return $this->languages->getAllLanguages($onlyActive, $onlyFrontend, $asArray);
     }
 
+    /**
+     * Parses the locale into composite elements
+     *
+     * @param $locale string, locale to return a display info
+     * @param $in_locale string, format locale to use to display info
+     * @return array, data collection about locale
+     */
     public function parseLocale($locale, $in_locale)
     {
         return $this->module->parseLocale($locale, $in_locale);

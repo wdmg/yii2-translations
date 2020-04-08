@@ -43,7 +43,8 @@
       "languageScheme": "before",
       "urlManagerConfig": [],
       "languageOpenGraph": true,
-      "languageHrefLang": true
+      "languageHrefLang": true,
+      "useExtendedPatterns": false
     }
   }
 }

@@ -83,7 +83,7 @@ if (is_array($locales)) {
                 ],
                 'value' => function($data) {
 
-                    if ($data->is_default)
+                    if ($data->is_default == $data::LANGUAGE_IS_DEFAULT)
                         return '<span class="fa fa-check text-success"></span>';
                     else
                         return '<span class="fa fa-check text-muted disabled"></span>';

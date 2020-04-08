@@ -2,12 +2,14 @@ Changelog
 =========
 
 ## 1.1.*
+ * Added preparePattern() and parseRequest() methods to UrlManager
+ * Add createAbsoluteUrl() method, remove hostInfo from config
  * Added `languageScheme`, `urlManagerConfig`, `languageOpenGraph` and `languageHrefLang` module properties
  * Added UrlManager
  * Renamed `locale` to` supportLocales` in public properties of module
  * Migrations, added translations component
  * Turn on Db cache by default
- 
+
 ## 1.1.2 (2020-03-27)
  * Up to date dependencies
  

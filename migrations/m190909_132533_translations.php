@@ -29,17 +29,31 @@ class m190909_132533_translations extends Migration
             'updated_by' => $this->integer(11)->notNull()->defaultValue(0), // Source of translation updated by user.id
         ], $tableOptions);
 
-        $this->createIndex(
-            '{{%idx-trans-sources}}',
-            '{{%trans_sources}}',
-            [
-                'id',
-                'category',
-                'language',
-                'alias',
-                'message(255)'
-            ]
-        );
+        if ($this->db->driverName === 'mysql') {
+            $this->createIndex(
+                '{{%idx-trans-sources}}',
+                '{{%trans_sources}}',
+                [
+                    'id',
+                    'category',
+                    'language',
+                    'alias',
+                    'message(255)'
+                ]
+            );
+        } else {
+            $this->createIndex(
+                '{{%idx-trans-sources}}',
+                '{{%trans_sources}}',
+                [
+                    'id',
+                    'category',
+                    'language',
+                    'alias',
+                    'message'
+                ]
+            );
+        }
 
         $this->createTable('{{%trans_messages}}', [
             'id' => $this->integer(11)->notNull(), // Primary key ID (int) of `trans_sources.id`
@@ -52,16 +66,29 @@ class m190909_132533_translations extends Migration
             'updated_by' => $this->integer(11)->notNull()->defaultValue(0), // Translation updated by user.id
         ], $tableOptions);
 
-        $this->createIndex(
-            '{{%idx-trans-messages}}',
-            '{{%trans_messages}}',
-            [
-                'id',
-                'language',
-                'translation(255)',
-                'status'
-            ]
-        );
+        if ($this->db->driverName === 'mysql') {
+            $this->createIndex(
+                '{{%idx-trans-messages}}',
+                '{{%trans_messages}}',
+                [
+                    'id',
+                    'language',
+                    'translation(255)',
+                    'status'
+                ]
+            );
+        } else {
+            $this->createIndex(
+                '{{%idx-trans-messages}}',
+                '{{%trans_messages}}',
+                [
+                    'id',
+                    'language',
+                    'translation',
+                    'status'
+                ]
+            );
+        }
 
         $this->addForeignKey(
             'fk_trans_messages_to_source',
@@ -99,19 +126,6 @@ class m190909_132533_translations extends Migration
                 'CASCADE'
             );
         }
-
-        /*if(class_exists('\wdmg\translations\models\Languages')) {
-            $this->addForeignKey(
-                'fk_trans_messages_to_langs',
-                '{{%trans_messages}}',
-                'language',
-                '{{%trans_langs}}',
-                'locale',
-                'NO ACTION',
-                'CASCADE'
-            );
-        }*/
-
     }
 
     /**
@@ -136,13 +150,6 @@ class m190909_132533_translations extends Migration
                     '{{%trans_messages}}'
                 );
             }
-
-            /*if(class_exists('\wdmg\translations\models\Languages')) {
-                $this->dropForeignKey(
-                    'fk_trans_messages_to_langs',
-                    '{{%trans_messages}}'
-                );
-            }*/
         }
 
         $this->dropForeignKey(

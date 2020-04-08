@@ -117,6 +117,15 @@ class Module extends BaseModule
      */
     public $languageHrefLang = true;
 
+
+    /**
+     * If you need to extend search by full code of locale
+     * for example: `en-US`,` ru-RU`
+     *
+     * @var bool
+     */
+    public $useExtendedPatterns = false;
+
     /**
      * {@inheritdoc}
      */
@@ -143,12 +152,17 @@ class Module extends BaseModule
             $this->urlManagerConfig = [
                 'enablePrettyUrl' => true,
                 'showScriptName' => false,
-                'enableStrictParsing' => true,
-                'suffix' => '/',
+                'enableStrictParsing' => false,
+                //'suffix' => '/',
                 'rules' => [
                     '/' => 'site/index',
                     '<action:admin>' => 'admin/<action>',
-                    '<action:\w+(?!admin)>' => 'site/<action>',
+
+                    '/' => 'site/index', // /en
+                    '/<lang:[\w-]+>' => 'site/index', // /en
+                    '/<action:\w+(?!admin)>' => 'site/<action>', // /en/site/about
+                    '/<lang:[\w-]+>/<action:\w+(?!admin)>' => 'site/<action>', // /en/site/about
+
                 ]
             ];
 
@@ -225,14 +239,13 @@ class Module extends BaseModule
             $forceTranslation = $this->forceTranslation;
 
         $i18n = Yii::$app->getI18n();
-        $translations = [
+        /*$translations = [
             'class' => 'yii\i18n\PhpMessageSource',
             'sourceLanguage' => $sourceLanguage,
             'forceTranslation' => $forceTranslation,
             'basePath' => '@vendor/' . $module->vendor . '/yii2-' . $module->id . '/messages'
         ];
-
-        //$i18n->translations[$translation->category] = ArrayHelper::merge((array) $i18n->translations[$translation->category], $translations);
+        $i18n->translations[$translation->category] = ArrayHelper::merge((array) $i18n->translations[$translation->category], $translations);*/
 
         if ($i18n->translations[$translation->category])
             return $translation->translatedMessage = $i18n->translate($translation->category.'/*', $translation->message, [], $translation->language);
@@ -371,8 +384,9 @@ class Module extends BaseModule
     /**
      * Returns the all original messages used for translation.
      *
-     * @param $messages array, list of translated messages
-     * @return array, list of sources messages
+     * @param array $messages
+     * @return array|null
+     * @throws \yii\base\InvalidConfigException
      */
     public function getSourceMessages($messages = [])
     {
@@ -471,9 +485,11 @@ class Module extends BaseModule
                 
                 'is_default' => (Yii::$app->sourceLanguage == $locale) ? 1 : 0
             ];
+
+        } else {
+            return false;
         }
 
-        return false;
     }
 
     /**
@@ -496,7 +512,7 @@ class Module extends BaseModule
                 $config = ArrayHelper::merge($this->urlManagerConfig, [
                     'class' => 'wdmg\translations\components\UrlManager'
                 ]);
-                $app->setComponents($config);
+                $app->setComponents(['urlManager' => $config]);
             }
         }
     }

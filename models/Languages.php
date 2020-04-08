@@ -32,8 +32,9 @@ use yii\behaviors\BlameableBehavior;
 class Languages extends ActiveRecord
 {
 
-    const LANGUAGE_STATUS_DISABLED = 0; // Language not active
-    const LANGUAGE_STATUS_ACTIVE = 1; // Language enabled
+    const LANGUAGE_STATUS_DISABLED = 0; // Language is not active flag
+    const LANGUAGE_STATUS_ACTIVE = 1; // Language is enabled flag
+    const LANGUAGE_IS_DEFAULT = 1; // Language is default flag
 
     public $languages;
     public $autoActivate;
@@ -145,7 +146,8 @@ class Languages extends ActiveRecord
 
         if ($onlyFrontend)
             $languages->where([
-                'is_frontend' => 1
+                'is_frontend' => 1,
+                'status' => self::LANGUAGE_STATUS_ACTIVE
             ]);
 
         $languages->indexBy('locale');
@@ -204,6 +206,8 @@ class Languages extends ActiveRecord
     }
 
     /**
+     * Returns a list of languages
+     *
      * @return array
      */
     public function getLanguagesList($allLanguages = false)
@@ -222,6 +226,9 @@ class Languages extends ActiveRecord
     }
 
     /**
+     * Returns a list of language accessibility statuses
+     *
+     * @param bool $allStatuses
      * @return array
      */
     public function getStatusesList($allStatuses = false)
@@ -241,7 +248,11 @@ class Languages extends ActiveRecord
         return $list;
     }
 
-    // Получение текущего объекта языка
+    /**
+     * Getting the current language object
+     *
+     * @return array|ActiveRecord|null
+     */
     public static function getCurrentLang() {
         if (is_null(self::$current)) {
             self::$current = self::getDefaultLang();
@@ -249,29 +260,42 @@ class Languages extends ActiveRecord
         return self::$current;
     }
 
-    // Установка текущего объекта языка и локаль пользователя
-    public static function setCurrent($url = null) {
-        $language = self::getLangByUrl($url);
-        self::$current = (is_null($language)) ? self::getDefaultLang() : $language;
-        Yii::$app->language = self::$current->local;
+    /**
+     * Set the current language of the object and the user's locale
+     *
+     * @param null $url
+     */
+    public static function setCurrentLang($url = null) {
+        $lang = self::getLangByUrl($url);
+        self::$current = (is_null($lang)) ? self::getDefaultLang() : $lang;
+        Yii::$app->language = self::$current->locale;
     }
 
-    // Получения объекта языка по умолчанию
+    /**
+     * Get the default language object
+     *
+     * @return array|ActiveRecord|null
+     */
     public static function getDefaultLang() {
-        return self::find()->where('`is_default` = :is_default', [':is_default' => 1])->one();
+        return self::find()->where(['is_default' => self::LANGUAGE_IS_DEFAULT, 'status' => self::LANGUAGE_STATUS_ACTIVE])->one();
     }
 
-    // Получения объекта языка по буквенному идентификатору
+    /**
+     * Get a language object by url identifier
+     *
+     * @param null $url
+     * @return array|ActiveRecord|null
+     */
     public static function getLangByUrl($url = null)
     {
         if (is_null($url)) {
             return null;
         } else {
-            $language = self::find()->where('url = :url', [':url' => $url])->one();
-            if (is_null($language)) {
+            $lang = self::find()->where(['url' => $url, 'status' => self::LANGUAGE_STATUS_ACTIVE])->one();
+            if (is_null($lang)) {
                 return null;
             } else {
-                return $language;
+                return $lang;
             }
         }
     }

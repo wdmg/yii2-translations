@@ -49,6 +49,7 @@ To add a module to the project, add the following data in your configuration fil
             'urlManagerConfig' => [], // UrlManager configuration
             'languageOpenGraph' => true, // add OpenGraph markup
             'languageHrefLang' => true, // add HrefLang attribute
+            'useExtendedPatterns' => false, // extend search by full code of locale
             ...
         ],
         ...

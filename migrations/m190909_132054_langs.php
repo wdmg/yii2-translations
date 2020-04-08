@@ -20,7 +20,7 @@ class m190909_132054_langs extends Migration
         $this->createTable('{{%trans_langs}}', [
             'id' => $this->primaryKey(), // Primary key ID (int)
             'url' => $this->string(3), // Language by ISO 639-1 / ISO 639-2, like `en` or `eng`
-            'locale' => $this->string(10), // Language by RFC 3066, like `en-US`
+            'locale' => $this->string(10)->unique(), // Language by RFC 3066, like `en-US`
             'name' => $this->string(64), // Title of language
             'is_default' => $this->tinyInteger(1)->null()->defaultValue(0), // Is default (source) language, 0 - no / 1 - yes
             'is_system' => $this->tinyInteger(1)->null()->defaultValue(0), // Is system language, 0 - no / 1 - yes
