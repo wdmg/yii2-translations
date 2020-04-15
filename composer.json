@@ -47,10 +47,7 @@
         "enableStrictParsing": false,
         "rules": {
           "/": "site/index",
-          "<action:admin>": "admin/<action>",
-          "/<lang:[\\w-]+>": "site/index",
-          "/<action:\\w+(?!admin)>": "site/<action>",
-          "/<lang:[\\w-]+>/<action:\\w+(?!admin)>": "site/<action>"
+          "/<action:\\w+>": "site/<action>"
         }
       },
       "languageOpenGraph": true,

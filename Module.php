@@ -108,11 +108,7 @@ class Module extends BaseModule
         'enableStrictParsing' => false,
         'rules' => [
             '/' => 'site/index',
-            '<action:admin>' => 'admin/<action>',
-            '/<lang:[\w-]+>' => 'site/index',
-            '/<action:\w+(?!admin)>' => 'site/<action>',
-            '/<lang:[\w-]+>/<action:\w+(?!admin)>' => 'site/<action>',
-
+            '<action:\w+>' => 'site/<action>'
         ]
     ];
 
@@ -502,6 +498,7 @@ class Module extends BaseModule
                 $config = ArrayHelper::merge($this->urlManagerConfig, [
                     'class' => 'wdmg\translations\components\UrlManager'
                 ]);
+                //var_dump($config);
                 $app->setComponents(['urlManager' => $config]);
             }
         }
