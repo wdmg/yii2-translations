@@ -7,7 +7,7 @@ namespace wdmg\translations\components;
  * Yii2 Translations
  *
  * @category        Component
- * @version         1.2.0
+ * @version         1.2.1
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-translations
  * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
@@ -19,6 +19,7 @@ use Yii;
 use yii\base\Component;
 use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
+use yii\web\NotFoundHttpException;
 
 class Translations extends Component
 {
@@ -68,9 +69,29 @@ class Translations extends Component
         return $this->module->parseLocale($locale, $in_locale);
     }
 
+    /**
+     * Returns a list of available languages
+     *
+     * @param bool $allLanguages
+     * @return mixed
+     */
     public function getLanguages($allLanguages = false)
     {
         return $this->languages->getLanguagesList($allLanguages);
+    }
+
+    /**
+     * Returns the default language locale
+     *
+     * @return string|null
+     */
+    public function getDefaultLang()
+    {
+        if (($lang = $this->languages->getDefaultLang()) !== null) {
+            return $lang->url;
+        } else {
+            return null;
+        }
     }
 
 }

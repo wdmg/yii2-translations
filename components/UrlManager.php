@@ -7,7 +7,7 @@ namespace wdmg\translations\components;
  * Yii2 UrlManager
  *
  * @category        Component
- * @version         1.2.0
+ * @version         1.2.1
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-translations
  * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
@@ -96,14 +96,31 @@ class UrlManager extends BaseUrlManager
         $url = parent::createUrl($params);
         if ($url && isset($this->module->languageScheme) && !is_null($lang)) {
 
-            switch ($this->module->languageScheme) {
+            if ($lang->is_default && $this->module->hideDefaultLang)
+                $lang->url = null;
+
+            $sheme = $this->module->languageScheme;
+            switch ($sheme) {
                 case "after":
 
-                    return ($url == '/') ? $lang->url : $url . $lang->url; // `http://example.com/site/index/en`
+                    return ($url == '/') ?  // `http://example.com/site/index/en`
+                        (
+                            ($lang->url) ?
+                            $lang->url :
+                            ''
+                        ) :
+                        $url . (
+                            ($lang->url) ?
+                            '/' . $lang->url :
+                            ''
+                        );
 
                 case "query":
 
-                    return ($url == '/') ? '?lang=' . $lang->url : $url . '?lang='. $lang->url; // `http://example.com/site/index/?lang=en`
+                    if ($lang->url) // `http://example.com/site/index/?lang=en`
+                        return ($url == '/') ? '?lang=' . $lang->url : $url . '?lang='. $lang->url;
+                    else
+                        return $url;
 
                 case "subdomain":
 
@@ -111,12 +128,21 @@ class UrlManager extends BaseUrlManager
                         $baseUrl = Url::base(true);
 
                     if ($withScheme) { // `http://en.example.com/site/index`
-                        if (mb_strpos($url, $baseUrl) !== false)
+
+                        if (($lang->url) && mb_strpos($url, $baseUrl) !== false)
                             return str_replace('://', '://' . $lang->url . '.', $url);
-                        else
+                        elseif ($lang->url)
                             return str_replace('://', '://' . $lang->url . '.', $baseUrl) . $url;
+                        else
+                            return $baseUrl . $url;
+
                     } else { // `http://en.example.com/site/index`
-                        $subdomain = str_replace('://', '://' . $lang->url . '.', $baseUrl);
+
+                        if ($lang->url)
+                            $subdomain = str_replace('://', '://' . $lang->url . '.', $baseUrl);
+                        else
+                            $subdomain = $baseUrl;
+
                         return ($url == '/') ? $subdomain . '/' : $subdomain . $url;
                     }
 
@@ -127,11 +153,13 @@ class UrlManager extends BaseUrlManager
 
                     if ($withScheme) {  // `http://example.com/en/site/index`
                         if (mb_strpos($url, $baseUrl) !== false)
-                            return str_replace($baseUrl, $baseUrl . '/' . $lang->url, $url);
+                            return str_replace($baseUrl, $baseUrl . (($lang->url) ? '/' . $lang->url : ''), $url);
                         else
-                            return $baseUrl . '/' . $lang->url . $url;
+                            return $baseUrl . (($lang->url) ? '/' . $lang->url : '') . $url;
                     } else {
-                        return ($url == '/') ? '/' . $lang->url : '/' . $lang->url . $url; // `/en` or `/en/site/index`
+                        return ($url == '/') ?
+                            (($lang->url) ? '/' . $lang->url : '') :
+                            (($lang->url) ? '/' . $lang->url : '') . $url; // `/en` or `/en/site/index`
                     }
 
             }
@@ -139,7 +167,6 @@ class UrlManager extends BaseUrlManager
         } else {
             return ($url == '/') ? '/' : '/' . $url; // `/` or `/site/index`
         }
-        return $url;
     }
 
 
@@ -247,7 +274,7 @@ class UrlManager extends BaseUrlManager
                 // If the locale is different from the language version of the ID in the URL
                 // do redirects to a URL with the correct identifier, eg
                 // URL http://example.com/en-us/site/index should be redirected to http://example.com/en/site/index
-                if (isset($languages[$locale]["url"])) {
+                if (in_array($scheme, ['before', 'after', 'query']) && isset($languages[$locale]["url"])) {
                     if ($languages[$locale]["url"] !== $locale) {
                         $url = str_replace($locale, '', $this->request->url);
                         $url = $this->createUrl([$url, 'lang' => $locale], true);

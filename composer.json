@@ -4,7 +4,7 @@
   "keywords": ["yii2", "yii2-translations", "translations", "wdmg"],
   "type": "yii2-extension",
   "license": "MIT",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "homepage": "https://github.com/wdmg/yii2-translations",
   "support": {
     "source": "https://github.com/wdmg/yii2-translations",
@@ -23,7 +23,7 @@
   "require": {
     "ext-intl": ">=1.0.0",
     "yiisoft/yii2": "^2.0.33",
-    "wdmg/yii2-base": "^1.1.6",
+    "wdmg/yii2-base": "^1.2.0",
     "wdmg/yii2-selectinput": "^1.0.7",
     "bower-asset/flags": "dev-master"
   },
@@ -44,7 +44,8 @@
       "urlManagerConfig": [],
       "languageOpenGraph": true,
       "languageHrefLang": true,
-      "useExtendedPatterns": false
+      "useExtendedPatterns": false,
+      "hideDefaultLang": true
     }
   }
 }

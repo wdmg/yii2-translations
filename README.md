@@ -50,6 +50,7 @@ To add a module to the project, add the following data in your configuration fil
             'languageOpenGraph' => true, // add OpenGraph markup
             'languageHrefLang' => true, // add HrefLang attribute
             'useExtendedPatterns' => false, // extend search by full code of locale
+            'hideDefaultLang' => true, // hide default language locale in URL`s
             ...
         ],
         ...
@@ -70,6 +71,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.1.2.1 - Added getDefaultLang() method for component, hide default lang in URL`s
 * v.1.2.0 - Added UrlManager and Translation components
 * v.1.1.2 - Up to date dependencies
 * v.1.1.1 - Fixed deprecated class declaration

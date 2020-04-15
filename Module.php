@@ -6,7 +6,7 @@ namespace wdmg\translations;
  * Yii2 Translations
  *
  * @category        Module
- * @version         1.2.0
+ * @version         1.2.1
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-translations
  * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
@@ -49,7 +49,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "1.2.0";
+    private $version = "1.2.1";
 
     /**
      * @var integer, priority of initialization
@@ -102,7 +102,12 @@ class Module extends BaseModule
      *
      * @var array
      */
-    public $urlManagerConfig = [];
+    public $urlManagerConfig = [
+        'enablePrettyUrl' => true,
+        'showScriptName' => false,
+        'enableStrictParsing' => false,
+        'rules' => []
+    ];
 
     /**
      * Add OpenGraph markup
@@ -117,7 +122,6 @@ class Module extends BaseModule
      */
     public $languageHrefLang = true;
 
-
     /**
      * If you need to extend search by full code of locale
      * for example: `en-US`,` ru-RU`
@@ -125,6 +129,13 @@ class Module extends BaseModule
      * @var bool
      */
     public $useExtendedPatterns = false;
+
+    /**
+     * Hide default language locale in URL`s
+     *
+     * @var bool
+     */
+    public $hideDefaultLang = true;
 
     /**
      * {@inheritdoc}
@@ -140,13 +151,13 @@ class Module extends BaseModule
         $this->setPriority($this->priority);
 
         // Language Scheme (position in URL)
-        if (empty($this->languageScheme) && isset(Yii::$app->params['translations.languageScheme']))
+        if (isset(Yii::$app->params['translations.languageScheme']))
             $this->languageScheme = Yii::$app->params['translations.languageScheme'];
         else
             $this->languageScheme = 'before';
 
         // Configure UrlManager
-        if (empty($this->urlManagerConfig) && isset(Yii::$app->params['translations.urlManagerConfig']))
+        if (isset(Yii::$app->params['translations.urlManagerConfig']))
             $this->urlManagerConfig = Yii::$app->params['translations.urlManagerConfig'];
         else
             $this->urlManagerConfig = [
@@ -168,7 +179,6 @@ class Module extends BaseModule
 
         // Add to UrlManager::baseUrl for console process
         if (Yii::$app instanceof \yii\console\Application) {
-
             if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.baseUrl'])) {
                 $baseUrl = Yii::$app->params['urlManager.baseUrl'];
                 $this->urlManagerConfig['baseUrl'] = $baseUrl;
@@ -181,14 +191,18 @@ class Module extends BaseModule
         // Add OpenGraph markup
         if (isset(Yii::$app->params['translations.languageOpenGraph']))
             $this->languageOpenGraph = Yii::$app->params['translations.languageOpenGraph'];
-        else
-            $this->languageOpenGraph = true;
 
         // Add HrefLang attribute
         if (isset(Yii::$app->params['translations.languageHrefLang']))
             $this->languageHrefLang = Yii::$app->params['translations.languageHrefLang'];
-        else
-            $this->languageHrefLang = true;
+
+        // Use extended patterns
+        if (isset(Yii::$app->params['translations.useExtendedPatterns']))
+            $this->useExtendedPatterns = Yii::$app->params['translations.useExtendedPatterns'];
+
+        // Hide default lang
+        if (isset(Yii::$app->params['translations.hideDefaultLang']))
+            $this->hideDefaultLang = Yii::$app->params['translations.hideDefaultLang'];
 
     }
 
@@ -251,20 +265,6 @@ class Module extends BaseModule
             return $translation->translatedMessage = $i18n->translate($translation->category.'/*', $translation->message, [], $translation->language);
         else
             return $translation->translatedMessage = $translation->message;
-
-        //$event->translatedMessage = $i18n->translate($event->category, $event->message, [], $event->language);
-
-        /*$i18n = Yii::$app->getI18n();
-        $i18n->translate($event->category, $event->message, [], $event->language);*/
-        // $event->translatedMessage = '-<@ '.$event->message.' @>-';
-
-        /*$i18n = Yii::$app->getI18n();
-        $i18n->translations[$event->category] = [
-            'class' => 'yii\i18n\PhpMessageSource',
-            'sourceLanguage' => 'en-US',
-            'basePath' => '@vendor/' . $module->vendor . '/yii2-' . $module->id . '/messages'
-        ];*/
-        // $event->translatedMessage = $i18n->translate($event->category, $event->message, [], $event->language);
 
     }
 

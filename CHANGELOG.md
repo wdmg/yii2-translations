@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## 1.2.1 (2020-04-16)
+ * Hide default lang in URL`s
+ * Added getDefaultLang() method for component
+ * Added hideDefaultLang option
+ 
 ## 1.2.0 (2020-04-09)
  * Added preparePattern() and parseRequest() methods to UrlManager
  * Add createAbsoluteUrl() method, remove hostInfo from config
