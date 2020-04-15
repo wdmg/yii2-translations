@@ -41,7 +41,18 @@
       "enableCaching": true,
       "cachingDuration": 3600,
       "languageScheme": "before",
-      "urlManagerConfig": [],
+      "urlManagerConfig": {
+        "enablePrettyUrl": true,
+        "showScriptName": false,
+        "enableStrictParsing": false,
+        "rules": {
+          "/": "site/index",
+          "<action:admin>": "admin/<action>",
+          "/<lang:[\\w-]+>": "site/index",
+          "/<action:\\w+(?!admin)>": "site/<action>",
+          "/<lang:[\\w-]+>/<action:\\w+(?!admin)>": "site/<action>"
+        }
+      },
       "languageOpenGraph": true,
       "languageHrefLang": true,
       "useExtendedPatterns": false,

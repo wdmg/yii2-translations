@@ -106,7 +106,14 @@ class Module extends BaseModule
         'enablePrettyUrl' => true,
         'showScriptName' => false,
         'enableStrictParsing' => false,
-        'rules' => []
+        'rules' => [
+            '/' => 'site/index',
+            '<action:admin>' => 'admin/<action>',
+            '/<lang:[\w-]+>' => 'site/index',
+            '/<action:\w+(?!admin)>' => 'site/<action>',
+            '/<lang:[\w-]+>/<action:\w+(?!admin)>' => 'site/<action>',
+
+        ]
     ];
 
     /**
@@ -159,23 +166,6 @@ class Module extends BaseModule
         // Configure UrlManager
         if (isset(Yii::$app->params['translations.urlManagerConfig']))
             $this->urlManagerConfig = Yii::$app->params['translations.urlManagerConfig'];
-        else
-            $this->urlManagerConfig = [
-                'enablePrettyUrl' => true,
-                'showScriptName' => false,
-                'enableStrictParsing' => false,
-                //'suffix' => '/',
-                'rules' => [
-                    '/' => 'site/index',
-                    '<action:admin>' => 'admin/<action>',
-
-                    '/' => 'site/index', // /en
-                    '/<lang:[\w-]+>' => 'site/index', // /en
-                    '/<action:\w+(?!admin)>' => 'site/<action>', // /en/site/about
-                    '/<lang:[\w-]+>/<action:\w+(?!admin)>' => 'site/<action>', // /en/site/about
-
-                ]
-            ];
 
         // Add to UrlManager::baseUrl for console process
         if (Yii::$app instanceof \yii\console\Application) {
