@@ -18,6 +18,22 @@ class m200401_132436_langs_frontend extends Migration
         }
 
         $this->createIndex('{{%idx-trans-langs-locale}}', '{{%trans_langs}}', ['locale']);
+
+        // Add default language
+        if (isset(Yii::$app->sourceLanguage)) {
+            $module = \wdmg\translations\Module::class;
+            $locale = $module::parseLocale(Yii::$app->sourceLanguage, Yii::$app->language);
+            if ($locale) {
+                $this->insert('{{%trans_langs}}', [
+                    'url' => $locale['short'],
+                    'locale' => $locale['locale'],
+                    'name' => $locale['name'],
+                    'is_default' => 1,
+                    'is_system' => 1,
+                    'status' => 1
+                ]);
+            }
+        }
     }
 
     /**

@@ -1,7 +1,8 @@
 Changelog
 =========
 
-## 1.2.1 (2020-04-16)
+## 1.2.1 (2020-04-19)
+ * Migrations fixed, parseLocale() as static function
  * Hide default lang in URL`s
  * Added getDefaultLang() method for component
  * Added hideDefaultLang option

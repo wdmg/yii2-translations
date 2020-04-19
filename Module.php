@@ -435,7 +435,7 @@ class Module extends BaseModule
      * @param $in_locale string, format locale to use to display info
      * @return array, data collection about locale
      */
-    public function parseLocale($locale, $in_locale)
+    public static function parseLocale($locale, $in_locale = null)
     {
         if ($data = \Locale::parseLocale($locale)) {
 
@@ -444,6 +444,9 @@ class Module extends BaseModule
                 $locale = $data['language'].'-'.$data['region'];
             else
                 $locale = $data['language'];
+
+            if (is_null($in_locale))
+                $in_locale = 'en';
 
             return [
                 'short' => $short,
