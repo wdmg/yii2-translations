@@ -159,24 +159,26 @@ class InitController extends Controller
                 $sourcesIds = [];
                 $insertRows = [];
                 $sourceCount = 0;
-                foreach ($sourcesList as $lang => $sources) {
-                    foreach ($sources as $category => $messages) {
-                        foreach ($messages as $message) {
-                            $sourcesModel = new Sources();
-                            $sourcesModel->language = $lang;
-                            $sourcesModel->category = $category;
-                            $sourcesModel->message = $message;
-                            $sourcesModel->alias = $sourcesModel->getStringAlias($message);  // @TODO: Issue, where alias key must be unique.
-                            $sourcesModel->created_at = new yii\db\Expression('NOW()');
-                            $sourcesModel->created_by = 0;
-                            $sourcesModel->updated_at = new yii\db\Expression('NOW()');
-                            $sourcesModel->updated_by = 0;
-                            if ($sourcesModel->validate()) {
-                                $insertRows[] = $sourcesModel;
-                                $sourceCount++;
-                                $sourcesIds[$category][$message] = $sourceCount;
-                            } else {
-                                echo var_export($sourcesModel->errors, true);
+                if (is_countable($sourcesList)) {
+                    foreach ($sourcesList as $lang => $sources) {
+                        foreach ($sources as $category => $messages) {
+                            foreach ($messages as $message) {
+                                $sourcesModel = new Sources();
+                                $sourcesModel->language = $lang;
+                                $sourcesModel->category = $category;
+                                $sourcesModel->message = $message;
+                                $sourcesModel->alias = $sourcesModel->getStringAlias($message);  // @TODO: Issue, where alias key must be unique.
+                                $sourcesModel->created_at = new yii\db\Expression('NOW()');
+                                $sourcesModel->created_by = 0;
+                                $sourcesModel->updated_at = new yii\db\Expression('NOW()');
+                                $sourcesModel->updated_by = 0;
+                                if ($sourcesModel->validate()) {
+                                    $insertRows[] = $sourcesModel;
+                                    $sourceCount++;
+                                    $sourcesIds[$category][$message] = $sourceCount;
+                                } else {
+                                    echo var_export($sourcesModel->errors, true);
+                                }
                             }
                         }
                     }
@@ -188,31 +190,32 @@ class InitController extends Controller
 
                 $insertRows = [];
                 $translationsCount = 0;
+                if (is_countable($translationsList)) {
+                    foreach ($translationsList as $lang => $sources) {
+                        foreach ($sources as $category => $translations) {
+                            foreach ($translations as $key => $translation) {
 
-                foreach ($translationsList as $lang => $sources) {
-                    foreach ($sources as $category => $translations) {
-                        foreach ($translations as $key => $translation) {
+                                if (isset($sourcesIds[$category][$key])) {
+                                    $id = $sourcesIds[$category][$key];
+                                    $translationsModel = new Translations();
+                                    $translationsModel->id = $id;
+                                    $translationsModel->language = $lang;
+                                    $translationsModel->translation = $translation;
+                                    $translationsModel->status = 1;
+                                    $translationsModel->created_at = new yii\db\Expression('NOW()');
+                                    $translationsModel->created_by = 0;
+                                    $translationsModel->updated_at = new yii\db\Expression('NOW()');
+                                    $translationsModel->updated_by = 0;
 
-                            if (isset($sourcesIds[$category][$key])) {
-                                $id = $sourcesIds[$category][$key];
-                                $translationsModel = new Translations();
-                                $translationsModel->id = $id;
-                                $translationsModel->language = $lang;
-                                $translationsModel->translation = $translation;
-                                $translationsModel->status = 1;
-                                $translationsModel->created_at = new yii\db\Expression('NOW()');
-                                $translationsModel->created_by = 0;
-                                $translationsModel->updated_at = new yii\db\Expression('NOW()');
-                                $translationsModel->updated_by = 0;
-
-                                if ($translationsModel->validate()) {
-                                    $insertRows[] = $translationsModel;
-                                    $translationsCount++;
-                                } else {
-                                    echo var_export($translationsModel->errors, true);
+                                    if ($translationsModel->validate()) {
+                                        $insertRows[] = $translationsModel;
+                                        $translationsCount++;
+                                    } else {
+                                        echo var_export($translationsModel->errors, true);
+                                    }
                                 }
-                            }
 
+                            }
                         }
                     }
                 }

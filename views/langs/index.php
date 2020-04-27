@@ -5,6 +5,7 @@ use yii\helpers\Url;
 use yii\grid\GridView;
 use yii\widgets\Pjax;
 use yii\widgets\ActiveForm;
+use yii\helpers\ArrayHelper;
 use wdmg\translations\FlagsAsset;
 use wdmg\widgets\SelectInput;
 /* @var $this yii\web\View */
@@ -23,7 +24,9 @@ if (is_array($locales)) {
             $country = '_unknown';
 
         $flag = Html::img($bundle->baseUrl . '/flags-iso/flat/24/'.$country.'.png');
-        $languages[] = [$locale['locale'] => ($flag . '&nbsp;' . $locale['full']['current'] . ' <span class="text-muted pull-right">'.$locale['locale'].'</span>')];
+        $languages = ArrayHelper::merge($languages, [
+                $locale['locale'] => ($flag . '&nbsp;' . $locale['full']['current'] . ' <span class="text-muted pull-right">'.$locale['locale'].'</span>')
+        ]);
     }
 }
 
@@ -281,21 +284,25 @@ if (is_array($locales)) {
         ]); ?>
         <legend><?= Yii::t('app/modules/translations', 'Available languages'); ?></legend>
         <div class="col-xs-6 col-sm-3 col-lg-3">
-            <?= $form->field($model, 'languages', [
-                'options' => [
-                    'tag' => false
-                ]])->label(false)->widget(SelectInput::class, [
-                'items' => $languages,
-                'options' => [
-                    'class' => 'form-control',
-                    'disabled' => (count($languages) == 0) ? true : false
-                ],
-                'pluginOptions' => [
-                    'dropdownClass' => '.dropdown .btn-block',
-                    'toggleClass' => '.btn .btn-default .dropdown-toggle .btn-block',
-                    'toggleText' => Yii::t('app/modules/translations', 'Select a language')
-                ]
-            ]); ?>
+            <div class="row">
+                <?= $form->field($model, 'languages', [
+                    'options' => [
+                        'tag' => false
+                    ]])->label(false)->widget(SelectInput::class, [
+                    'items' => $languages,
+                    'options' => [
+                        'class' => 'form-control',
+                        'style' => 'width: 100%;',
+                        'placeholder' => Yii::t('app/modules/translations', 'Type or select language…'),
+                        'disabled' => (count($languages) == 0) ? true : false
+                    ],
+                    'pluginOptions' => [
+                        'autocomplete' => Url::to(['', 'autocomplete' => 'languages']),
+                        'toggleClass' => '.btn .btn-primary .dropdown-toggle',
+                        'toggleText' => Yii::t('app/modules/translations', 'Select language')
+                    ]
+                ]); ?>
+            </div>
         </div>
         <div class="col-xs-6 col-sm-3 col-lg-3">
             <?= $form->field($model, 'autoActivate')->checkbox([

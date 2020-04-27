@@ -1,6 +1,10 @@
 Changelog
 =========
 
+## 1.2.*
+ * Fixed console batch add sources
+ * Update SelectInput::widget() version
+ 
 ## 1.2.1 (2020-04-19)
  * Migrations fixed, parseLocale() as static function
  * Hide default lang in URL`s

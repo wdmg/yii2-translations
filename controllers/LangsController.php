@@ -104,6 +104,24 @@ class LangsController extends Controller
         $searchModel = new LanguagesSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
+        // Get the list of supported locales without already installed
+        $languages = $model::getAllLanguages(false, false, true);
+        $supported = ArrayHelper::map($languages, 'id', 'locale');
+
+        foreach ($module->getLocales() as $data) {
+            if (is_object($data)) {
+                if (isset($data->locale)) {
+                    if (!in_array($data->locale, $supported))
+                        $locales[] = $data;
+                }
+            } elseif (is_array($data)) {
+                if (isset($data['locale'])) {
+                    if (!in_array($data['locale'], $supported))
+                        $locales[] = $data;
+                }
+            }
+        }
+
         // Change model status (aJax request by switcher)
         if (Yii::$app->request->isAjax) {
             if (Yii::$app->request->get('change') == "status") {
@@ -132,6 +150,12 @@ class LangsController extends Controller
                         return false;
                     }
                 }
+            } elseif (Yii::$app->request->get('autocomplete') == "languages") {
+                return $this->asJson(
+                    array_unique(
+                        ArrayHelper::map($locales, 'locale', 'full.current')
+                    )
+                );
             }
         } elseif (Yii::$app->request->isPost) {
             if ($post = Yii::$app->request->post()) {
@@ -209,24 +233,6 @@ class LangsController extends Controller
                     } else {
                         throw new NotFoundHttpException(Yii::t('app/modules/translations', 'The requested language does not exist.'));
                     }
-                }
-            }
-        }
-
-        // Get the list of supported locales without already installed
-        $languages = $model::getAllLanguages(false, false, true);
-        $supported = ArrayHelper::map($languages, 'id', 'locale');
-
-        foreach ($module->getLocales() as $data) {
-            if (is_object($data)) {
-                if (isset($data->locale)) {
-                    if (!in_array($data->locale, $supported))
-                        $locales[] = $data;
-                }
-            } elseif (is_array($data)) {
-                if (isset($data['locale'])) {
-                    if (!in_array($data['locale'], $supported))
-                        $locales[] = $data;
                 }
             }
         }
