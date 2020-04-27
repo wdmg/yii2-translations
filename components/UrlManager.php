@@ -7,7 +7,7 @@ namespace wdmg\translations\components;
  * Yii2 UrlManager
  *
  * @category        Component
- * @version         1.2.1
+ * @version         1.2.2
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-translations
  * @copyright       Copyright (c) 2019 - 2020 W.D.M.Group, Ukraine
