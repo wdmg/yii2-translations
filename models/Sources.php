@@ -99,10 +99,10 @@ class Sources extends ActiveRecord
 
     public function checkUniqueAlias()
     {
-        if (is_null($sources = self::findOne(['id' => $this->id, 'alias' => $this->alias]))) {
+        /*if (is_null($sources = self::findOne(['id' => $this->id, 'alias' => $this->alias]))) {
             if (!is_null($this->alias) && !is_null($sources = self::findOne(['alias' => $this->alias])))
                 $this->addError('alias', Yii::t('app/modules/translations', 'Alias key must be unique.'));
-        }
+        }*/
     }
 
     /**

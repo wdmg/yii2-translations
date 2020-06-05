@@ -164,14 +164,16 @@ class Module extends BaseModule
             $this->urlManagerConfig = Yii::$app->params['translations.urlManagerConfig'];
 
         // Add to UrlManager::baseUrl for console process
-        if (Yii::$app instanceof \yii\console\Application) {
+        if ($this->isConsole() && isset($this->urlManagerConfig)) {
             if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.baseUrl'])) {
                 $baseUrl = Yii::$app->params['urlManager.baseUrl'];
                 $this->urlManagerConfig['baseUrl'] = $baseUrl;
-                $this->urlManagerConfig['hostInfo'] = null;
-                $_SERVER['HTTP_HOST'] = $baseUrl;
+                //$_SERVER['HTTP_HOST'] = $baseUrl;
             }
-
+            if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.hostInfo'])) {
+                $hostInfo = Yii::$app->params['urlManager.hostInfo'];
+                $this->urlManagerConfig['hostInfo'] = $hostInfo;
+            }
         }
 
         // Add OpenGraph markup
@@ -495,15 +497,18 @@ class Module extends BaseModule
             ]
         ]);
 
-        if (!Yii::$app instanceof \yii\console\Application) {
-            // Configure UrlManager
-            if (!$this->isBackend()) {
-                $config = ArrayHelper::merge($this->urlManagerConfig, [
-                    'class' => 'wdmg\translations\components\UrlManager'
-                ]);
-                //var_dump($config);
-                $app->setComponents(['urlManager' => $config]);
+        // Configure UrlManager
+        if (!$this->isBackend() || $this->isConsole()) {
+            $config = ArrayHelper::merge($this->urlManagerConfig, [
+                'class' => 'wdmg\translations\components\UrlManager'
+            ]);
+
+            if ($this->isConsole()) {
+                $config['hostInfo'] = 'example.com';
+                $config['baseUrl'] = 'http://example.com/';
             }
+
+            $app->setComponents(['urlManager' => $config]);
         }
     }
 }

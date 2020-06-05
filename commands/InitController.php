@@ -59,6 +59,7 @@ class InitController extends Controller
             Yii::$app->runAction('migrate/down', ['migrationPath' => '@vendor/wdmg/yii2-translations/migrations', 'interactive' => true]);
         } else if($selected == "3") {
 
+            $db = Yii::$app->db;
             $langList = null;
             $languagesModel = new Languages();
             foreach ($languagesModel->find()->where(['status' => 1])->select('locale')->asArray()->groupBy('locale')->all() as $locale) {
@@ -124,9 +125,20 @@ class InitController extends Controller
                                 }
                             }
 
-                            Yii::$app->db->createCommand()->batchInsert(Languages::tableName(), $languagesModel->attributes(), $insertRows)->execute();
-                            echo "\n\n";
-                            echo "Added new languages: " .$langsCount. "\n";
+                            $sourcesModel = new Languages();
+                            $sql = $db->queryBuilder->batchInsert($languagesModel::tableName(), $languagesModel->attributes(), $insertRows);
+                            $db->createCommand($sql . ' ON DUPLICATE KEY UPDATE ' .
+                                implode(', ',
+                                    array_map(function($attribute) {
+                                        return $attribute . ' = VALUES(' . $attribute . ')';
+                                    }, $languagesModel->attributes())
+                                )
+                            )->execute();
+
+                            echo "Added/updated languages: " . $langsCount . "\n";
+
+
+
                         }
                     }
 
@@ -185,8 +197,16 @@ class InitController extends Controller
                 }
 
                 $sourcesModel = new Sources();
-                Yii::$app->db->createCommand()->batchInsert(Sources::tableName(), $sourcesModel->attributes(), $insertRows)->execute();
-                echo "Added sources of messages: " .$sourceCount. "\n";
+                $sql = $db->queryBuilder->batchInsert($sourcesModel::tableName(), $sourcesModel->attributes(), $insertRows);
+                $db->createCommand($sql . ' ON DUPLICATE KEY UPDATE ' .
+                    implode(', ',
+                        array_map(function($attribute) {
+                            return $attribute . ' = VALUES(' . $attribute . ')';
+                        }, $sourcesModel->attributes())
+                    )
+                )->execute();
+
+                echo "Added/updated sources: " . $sourceCount . "\n";
 
                 $insertRows = [];
                 $translationsCount = 0;
@@ -221,8 +241,16 @@ class InitController extends Controller
                 }
 
                 $translationsModel = new Translations();
-                Yii::$app->db->createCommand()->batchInsert(Translations::tableName(), $translationsModel->attributes(), $insertRows)->execute();
-                echo "Added translations of messages: " .$translationsCount. "\n";
+                $sql = $db->queryBuilder->batchInsert($translationsModel::tableName(), $translationsModel->attributes(), $insertRows);
+                $db->createCommand($sql . ' ON DUPLICATE KEY UPDATE ' .
+                    implode(', ',
+                        array_map(function($attribute) {
+                            return $attribute . ' = VALUES(' . $attribute . ')';
+                        }, $translationsModel->attributes())
+                    )
+                )->execute();
+
+                echo "Added/updated translations: " . $translationsCount . "\n";
 
             }
         } else {

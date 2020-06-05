@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.2.*
+ * Added/updated languages
+ 
 ## 1.2.2 (2020-04-27)
  * Fixed console batch add sources
  * Update SelectInput::widget() version
