@@ -1,7 +1,8 @@
 Changelog
 =========
 
-## 1.2.*
+## 1.2.3 (2020-06-14)
+ * Update README.md
  * Added/updated languages
  
 ## 1.2.2 (2020-04-27)

@@ -1,15 +1,21 @@
-[![Yii2](https://img.shields.io/badge/required-Yii2_v2.0.33-blue.svg)](https://packagist.org/packages/yiisoft/yii2)
+[![Yii2](https://img.shields.io/badge/required-Yii2_v2.0.35-blue.svg)](https://packagist.org/packages/yiisoft/yii2)
 [![Downloads](https://img.shields.io/packagist/dt/wdmg/yii2-translations.svg)](https://packagist.org/packages/wdmg/yii2-translations)
 [![Packagist Version](https://img.shields.io/packagist/v/wdmg/yii2-translations.svg)](https://packagist.org/packages/wdmg/yii2-translations)
 ![Progress](https://img.shields.io/badge/progress-ready_to_use-green.svg)
 [![GitHub license](https://img.shields.io/github/license/wdmg/yii2-translations.svg)](https://github.com/wdmg/yii2-translations/blob/master/LICENSE)
 
+<img src="./docs/images/yii2-translations.png" width="100%" alt="Yii2 Translations manager" />
+
 # Yii2 Translations
-Translate manager for Yii2
+Translate manager for Yii2. The module manages the translations and languages of the system. Outputs language versions to the frontend of the site through its own component. The functionality of the module interacts with other modules and provides multilingual content.
+
+This module is an integral part of the [Butterfly.SMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
+
+Copyrights (c) 2019-2020 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
 
 # Requirements 
 * PHP 5.6 or higher
-* Yii2 v.2.0.33 and newest
+* Yii2 v.2.0.35 and newest
 * [Yii2 Base](https://github.com/wdmg/yii2-base) module (required)
 
 # Installation
@@ -71,6 +77,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.1.2.3 - Update README.md and added/updated languages
 * v.1.2.2 - Fixed console batch add sources & update SelectInput::widget() version
 * v.1.2.1 - Added getDefaultLang() method for component, hide default lang in URL`s
 * v.1.2.0 - Added UrlManager and Translation components
