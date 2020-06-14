@@ -9,7 +9,7 @@
 # Yii2 Translations
 Translate manager for Yii2. The module manages the translations and languages of the system. Outputs language versions to the frontend of the site through its own component. The functionality of the module interacts with other modules and provides multilingual content.
 
-This module is an integral part of the [Butterfly.SMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
+This module is an integral part of the [Butterfly.CMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
 
 Copyrights (c) 2019-2020 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
 
