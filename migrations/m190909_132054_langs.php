@@ -26,9 +26,9 @@ class m190909_132054_langs extends Migration
             'is_system' => $this->tinyInteger(1)->null()->defaultValue(0), // Is system language, 0 - no / 1 - yes
             'status' => $this->tinyInteger(1)->null()->defaultValue(0), // Status, 0 - draft / 1 - published
             'created_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'), // Source of translation created date (timestamp)
-            'created_by' => $this->integer(11)->notNull()->defaultValue(0), // Source of translation created by user.id
+            'created_by' => $this->integer(11)->null(), // Source of translation created by user.id
             'updated_at' => $this->datetime()->defaultExpression('CURRENT_TIMESTAMP'), // Source of translation updated date (timestamp)
-            'updated_by' => $this->integer(11)->notNull()->defaultValue(0), // Source of translation updated by user.id
+            'updated_by' => $this->integer(11)->null(), // Source of translation updated by user.id
         ], $tableOptions);
 
         $this->createIndex(

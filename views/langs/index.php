@@ -329,18 +329,20 @@ if (is_array($locales)) {
     var requestURL = window.location.href;
     if ($container.length > 0) {
         $container.delegate(\'[data-toggle="button-switcher"] button\', \'click\', function() {
-            var id = $(this).parent(\'.btn-group\').data(\'id\');
-            var attribute = $(this).parent(\'.btn-group\').data(\'attribute\');
-            var value = $(this).data(\'value\');
-             $.ajax({
+            let id = $(this).parent(\'.btn-group\').data(\'id\');
+            let attribute = $(this).parent(\'.btn-group\').data(\'attribute\');
+            let value = $(this).data(\'value\');
+            let url = new URL(requestURL);
+            url.searchParams.set(\'change\', attribute);            
+            $.ajax({
                 type: "POST",
-                url: requestURL + \'?change=\' + attribute,
+                url: url.toString(),
                 dataType: \'json\',
                 data: {\'id\': id, \'value\': value},
                 complete: function(data) {
                     $.pjax.reload({type:\'POST\', container:\'#translationsLangsAjax\'});
                 }
-             });
+            });
         });
     }', \yii\web\View::POS_READY
 ); ?>

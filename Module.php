@@ -160,19 +160,24 @@ class Module extends BaseModule
             $this->languageScheme = 'before';
 
         // Configure UrlManager
-        if (isset(Yii::$app->params['translations.urlManagerConfig']))
-            $this->urlManagerConfig = Yii::$app->params['translations.urlManagerConfig'];
+        if (isset(Yii::$app->params['translations.urlManagerConfig'])) {
+            if (!empty(Yii::$app->params['translations.urlManagerConfig'])) {
+                $this->urlManagerConfig = Yii::$app->params['translations.urlManagerConfig'];
+            }
+        }
 
         // Add to UrlManager::baseUrl for console process
         if ($this->isConsole() && isset($this->urlManagerConfig)) {
-            if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.baseUrl'])) {
-                $baseUrl = Yii::$app->params['urlManager.baseUrl'];
-                $this->urlManagerConfig['baseUrl'] = $baseUrl;
-                //$_SERVER['HTTP_HOST'] = $baseUrl;
-            }
-            if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.hostInfo'])) {
-                $hostInfo = Yii::$app->params['urlManager.hostInfo'];
-                $this->urlManagerConfig['hostInfo'] = $hostInfo;
+            if (!empty($this->urlManagerConfig)) {
+                if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.baseUrl'])) {
+                    $baseUrl = Yii::$app->params['urlManager.baseUrl'];
+                    $this->urlManagerConfig['baseUrl'] = $baseUrl;
+                    //$_SERVER['HTTP_HOST'] = $baseUrl;
+                }
+                if (!isset($this->urlManagerConfig['baseUrl']) && isset(Yii::$app->params['urlManager.hostInfo'])) {
+                    $hostInfo = Yii::$app->params['urlManager.hostInfo'];
+                    $this->urlManagerConfig['hostInfo'] = $hostInfo;
+                }
             }
         }
 
@@ -197,7 +202,7 @@ class Module extends BaseModule
     /**
      * {@inheritdoc}
      */
-    public function dashboardNavItems($createLink = false)
+    public function dashboardNavItems($options = false)
     {
         $items = [
             'label' => $this->name,
@@ -498,7 +503,7 @@ class Module extends BaseModule
         ]);
 
         // Configure UrlManager
-        if (!$this->isBackend() || $this->isConsole()) {
+        if ((!$this->isBackend() || $this->isConsole()) && !empty($this->urlManagerConfig)) {
             $config = ArrayHelper::merge($this->urlManagerConfig, [
                 'class' => 'wdmg\translations\components\UrlManager'
             ]);

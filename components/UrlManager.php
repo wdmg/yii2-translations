@@ -231,7 +231,6 @@ class UrlManager extends BaseUrlManager
      */
     public function parseRequest($request)
     {
-
         $language = null;
         $this->request = $request;
         $request_url = $this->request->getAbsoluteUrl();

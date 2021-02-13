@@ -24,9 +24,9 @@ class m190909_132533_translations extends Migration
             'alias' => $this->string(32), // Alias key of translation, like `is-text-about-company-12945f0845` for entry `Is text about company...`
             'message' => $this->text(), // Message source
             'created_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'), // Source of translation created date (timestamp)
-            'created_by' => $this->integer(11)->notNull()->defaultValue(0), // Source of translation created by user.id
+            'created_by' => $this->integer(11)->null(), // Source of translation created by user.id
             'updated_at' => $this->datetime()->defaultExpression('CURRENT_TIMESTAMP'), // Source of translation updated date (timestamp)
-            'updated_by' => $this->integer(11)->notNull()->defaultValue(0), // Source of translation updated by user.id
+            'updated_by' => $this->integer(11)->null(), // Source of translation updated by user.id
         ], $tableOptions);
 
         if ($this->db->driverName === 'mysql') {
@@ -61,9 +61,9 @@ class m190909_132533_translations extends Migration
             'translation' => $this->text(), // Message translation
             'status' => $this->tinyInteger(1)->null()->defaultValue(0),
             'created_at' => $this->dateTime()->notNull()->defaultExpression('CURRENT_TIMESTAMP'), // Translation created date (timestamp)
-            'created_by' => $this->integer(11)->notNull()->defaultValue(0), // Translation created by user.id
+            'created_by' => $this->integer(11)->null(), // Translation created by user.id
             'updated_at' => $this->datetime()->defaultExpression('CURRENT_TIMESTAMP'), // Translation updated date (timestamp)
-            'updated_by' => $this->integer(11)->notNull()->defaultValue(0), // Translation updated by user.id
+            'updated_by' => $this->integer(11)->null(), // Translation updated by user.id
         ], $tableOptions);
 
         if ($this->db->driverName === 'mysql') {

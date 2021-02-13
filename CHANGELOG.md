@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.2.*
+ * JS, UrlManagerConfig fixed
+ 
 ## 1.2.3 (2020-06-14)
  * Update README.md
  * Added/updated languages
