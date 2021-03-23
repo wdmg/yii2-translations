@@ -508,10 +508,21 @@ class Module extends BaseModule
                 'class' => 'wdmg\translations\components\UrlManager'
             ]);
 
-            if ($this->isConsole()) {
-                $config['hostInfo'] = 'example.com';
-                $config['baseUrl'] = 'http://example.com/';
-            }
+            if (isset($app->options))
+                $hostInfo = $app->options->get('hostInfo') ?? $app->params['hostInfo'] ?? null;
+            else
+                $hostInfo = $app->params['hostInfo'] ?? null;
+
+            if (isset($app->options))
+                $baseUrl = $app->options->get('baseUrl') ?? $app->params['baseUrl'] ?? null;
+            else
+                $baseUrl = $app->params['baseUrl'] ?? null;
+
+            if ($this->isConsole() && $hostInfo)
+                $config['hostInfo'] = $hostInfo;
+
+            if ($this->isConsole() && $baseUrl)
+                $config['baseUrl'] = $baseUrl;
 
             $app->setComponents(['urlManager' => $config]);
         }
