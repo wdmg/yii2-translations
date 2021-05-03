@@ -2,6 +2,7 @@ Changelog
 =========
 
 ## 1.2.*
+ * Added delete all translations
  * JS, UrlManagerConfig fixed
  
 ## 1.2.3 (2020-06-14)

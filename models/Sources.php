@@ -130,10 +130,13 @@ class Sources extends ActiveRecord
      * @return string or null
      */
     private function getStringHash($string) {
-        if (!empty($string))
-            return substr(sha1($string), 0, 5) . substr(sha1($string), -1, 6);
-        else
-            return null;
+        if (!empty($string)) {
+            $string = $string . time() . rand(1000, 9999);
+            $string2 = rand(100, 999) . $string . time();
+            return substr(sha1($string), 0, 7) . substr(sha1($string2), -1, 8);
+        }
+
+        return null;
     }
 
     /**
@@ -143,10 +146,16 @@ class Sources extends ActiveRecord
      * @return string or null
      */
     public function getStringAlias($string) {
+
+        /*
+         * @TODO: Issue, where alias key must be unique.
+         * `SELECT alias, COUNT(*) c FROM btf_trans_sources GROUP BY alias HAVING c > 1`
+         */
+
         if (!empty($string))
-            return Inflector::slug(substr($string, 0, 25), '-', true) .'-'. $this->getStringHash($string);
-        else
-            return null;
+            return Inflector::slug(substr($string, 0, 23), '-', true) . '-' . $this->getStringHash($string);
+
+        return null;
     }
 
     /**

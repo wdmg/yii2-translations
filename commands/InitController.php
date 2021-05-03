@@ -45,7 +45,8 @@ class InitController extends Controller
         echo "Select the operation you want to perform:\n";
         echo "  1) Apply all module migrations\n";
         echo "  2) Revert all module migrations\n";
-        echo "  3) Scan/re-scan and add translations\n\n";
+        echo "  3) Scan/re-scan and add translations\n";
+        echo "  4) Delete all translations\n\n";
         echo "Your choice: ";
 
         if(!is_null($this->choice))
@@ -252,6 +253,19 @@ class InitController extends Controller
 
                 echo "Added/updated translations: " . $translationsCount . "\n";
 
+            }
+        } else if($selected == "4") {
+            try {
+                Yii::$app->db->createCommand()->checkIntegrity(false, '', Translations::tableName())->execute();
+                Yii::$app->db->createCommand()->truncateTable(Translations::tableName())->execute();
+                Yii::$app->db->createCommand()->checkIntegrity(true, '', Translations::tableName())->execute();
+                Yii::$app->db->createCommand()->checkIntegrity(false, '', Sources::tableName())->execute();
+                Yii::$app->db->createCommand()->truncateTable(Sources::tableName())->execute();
+                Yii::$app->db->createCommand()->checkIntegrity(true, '', Sources::tableName())->execute();
+                echo "All translations and sources has been successfully deleted.\n";
+            } catch (\yii\db\Exception $exception)  {
+                echo $this->ansiFormat("An error occurred while deleting translations and sources.\n\n", Console::FG_RED);
+                return ExitCode::UNSPECIFIED_ERROR;
             }
         } else {
             echo $this->ansiFormat("Error! Your selection has not been recognized.\n\n", Console::FG_RED);
