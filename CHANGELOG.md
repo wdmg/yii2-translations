@@ -1,7 +1,8 @@
 Changelog
 =========
 
-## 1.2.*
+## 1.3.0 (2023-03-30)
+ * Update dependencies, copyrights
  * Added delete all translations
  * JS, UrlManagerConfig fixed
  

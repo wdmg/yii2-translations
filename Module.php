@@ -6,10 +6,10 @@ namespace wdmg\translations;
  * Yii2 Translations
  *
  * @category        Module
- * @version         1.2.3
+ * @version         1.3.0
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-translations
- * @copyright       Copyright (c) 2019 - 2021 W.D.M.Group, Ukraine
+ * @copyright       Copyright (c) 2019 - 2023 W.D.M.Group, Ukraine
  * @license         https://opensource.org/licenses/MIT Massachusetts Institute of Technology (MIT) License
  *
  */
@@ -49,7 +49,7 @@ class Module extends BaseModule
     /**
      * @var string the module version
      */
-    private $version = "1.2.3";
+    private $version = "1.3.0";
 
     /**
      * @var integer, priority of initialization
@@ -509,14 +509,14 @@ class Module extends BaseModule
             ]);
 
             if (isset($app->options))
-                $hostInfo = $app->options->get('hostInfo') ?? $app->params['hostInfo'] ?? null;
+                $hostInfo = ($app->options->get('hostInfo')) ? $app->params['hostInfo'] : null;
             else
-                $hostInfo = $app->params['hostInfo'] ?? null;
+                $hostInfo = ($app->params['hostInfo']) ? $app->params['hostInfo'] : null;
 
             if (isset($app->options))
-                $baseUrl = $app->options->get('baseUrl') ?? $app->params['baseUrl'] ?? null;
+                $baseUrl = ($app->options->get('baseUrl')) ? $app->params['baseUrl'] : null;
             else
-                $baseUrl = $app->params['baseUrl'] ?? null;
+                $baseUrl = ($app->params['baseUrl']) ? $app->params['baseUrl'] : null;
 
             if ($this->isConsole() && $hostInfo)
                 $config['hostInfo'] = $hostInfo;

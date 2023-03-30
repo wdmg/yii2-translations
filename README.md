@@ -11,7 +11,7 @@ Translate manager for Yii2. The module manages the translations and languages of
 
 This module is an integral part of the [Butterfly.CMS](https://butterflycms.com/) content management system, but can also be used as an standalone extension.
 
-Copyrights (c) 2019-2021 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
+Copyrights (c) 2019-2023 [W.D.M.Group, Ukraine](https://wdmg.com.ua/)
 
 # Requirements 
 * PHP 5.6 or higher
@@ -77,6 +77,7 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.1.3.0 - Fixes, update dependencies and copyrights
 * v.1.2.3 - Update README.md and added/updated languages
 * v.1.2.2 - Fixed console batch add sources & update SelectInput::widget() version
 * v.1.2.1 - Added getDefaultLang() method for component, hide default lang in URL`s
