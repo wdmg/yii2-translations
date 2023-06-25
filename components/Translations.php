@@ -7,7 +7,6 @@ namespace wdmg\translations\components;
  * Yii2 Translations
  *
  * @category        Component
- * @version         1.2.3
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-translations
  * @copyright       Copyright (c) 2019 - 2021 W.D.M.Group, Ukraine

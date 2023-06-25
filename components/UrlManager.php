@@ -7,7 +7,6 @@ namespace wdmg\translations\components;
  * Yii2 UrlManager
  *
  * @category        Component
- * @version         1.2.3
  * @author          Alexsander Vyshnyvetskyy <alex.vyshnyvetskyy@gmail.com>
  * @link            https://github.com/wdmg/yii2-translations
  * @copyright       Copyright (c) 2019 - 2021 W.D.M.Group, Ukraine
@@ -285,7 +284,7 @@ class UrlManager extends BaseUrlManager
                 // If the language was found, install it as the application language
                 // and as a locale for forming other links
                 if ($locales[$locale]) {
-                    $this->languages::setCurrentLang($locale);
+                    $this->languages->setCurrentLang($locale);
                 }
             } /* else {
                 // Throw an exception if the language is not defined, or the language is not available for front-end

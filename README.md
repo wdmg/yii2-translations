@@ -77,12 +77,6 @@ Use the `Module::dashboardNavItems()` method of the module to generate a navigat
     ?>
 
 # Status and version [ready to use]
+* v.1.3.1 - Fix url manager for set lang
 * v.1.3.0 - Fixes, update dependencies and copyrights
 * v.1.2.3 - Update README.md and added/updated languages
-* v.1.2.2 - Fixed console batch add sources & update SelectInput::widget() version
-* v.1.2.1 - Added getDefaultLang() method for component, hide default lang in URL`s
-* v.1.2.0 - Added UrlManager and Translation components
-* v.1.1.2 - Up to date dependencies
-* v.1.1.1 - Fixed deprecated class declaration
-* v.1.1.0 - CRUD for translations
-* v.1.0.1 - Added console scan for sources and translations

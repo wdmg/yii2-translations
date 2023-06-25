@@ -1,6 +1,9 @@
 Changelog
 =========
 
+## 1.3.1 (2023-06-24)
+ * Fix url manager for set lang
+
 ## 1.3.0 (2023-03-30)
  * Update dependencies, copyrights
  * Added delete all translations
